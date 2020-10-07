@@ -40,27 +40,27 @@ git remote prune <remoteName>
 ```
 
 
-## **III. Create a branch**
+## **III. Create a branch** Default `remoteName` is `origin`
 
-- Create a local branch and switch to it (Prefer)
+- Create a local branch and switch to it (***Prefer***)
 ```bash
 git checkout -b <branchName>
 
 # eg: git checkout -b new-feature
 ```
 
-- Create a local branch
-```bash
-git branch <branchName>
-
-# eg: git branch new-feature
-```
-
-- Create a remote branch and add tracking (*Happen after you created a local branch and want to push it to a remote repo*). Default `remoteName` is `origin`
+- Create a remote branch and add tracking (*Happen after you created a local branch and want to push it to a remote repo*). (***Prefer***) 
 ```bash
 git push -u <remoteName> <branchName>
 
 # eg: git push -u origin new-feature
+```
+
+- Create a local branch (*w/o set remote reference i.e. tracking*)
+```bash
+git branch <branchName>
+
+# eg: git branch new-feature
 ```
 
 - Create a remote branch (no tracking)
@@ -68,6 +68,15 @@ git push -u <remoteName> <branchName>
 git push <remoteName> <branchName>
 
 # eg: git push origin new-feature
+```
+
+- Add remote reference (tracking) to a brach
+```bash
+# Step 1: Push your new branch to remote repo
+git push <remoteName> <branchName>
+
+# Step 2: Set tracking
+git branch -u <remoteName>/<branchName>
 ```
 
 ## **IV. Switching branch**
@@ -130,8 +139,95 @@ git commit --amend -m "<newMessage>"
 # Update remote repo
 git push --force <remoteName> <branchName>
 ```
+## **VI. Pulling**
 
-## **VI. List commits**
+- Fetch all branches: Update references and histories of remote branches (*Won't pull in changes into local branches*)
+```bash
+git fetch <remoteName>
+
+# eg: git fetch origin
+```
+
+- Fetch a branch: Update references and histories the remote branch (*Won't pull in changes into the local branch*)
+```bash
+git fetch <remoteName> <branchName>
+
+# eg: git fetch origin a-remote-branch
+```
+
+- Pull to local branch **with rebase** (***Prefer***) (*Won't generate a merge commit and place local changes/commits on top of the commit list -> Minimize number of merge commits*)
+```bash
+git pull --rebase
+```
+
+- Pull to local branch: Retrieve changes from the remote server and integrate them into a local branch (*This will create a merge commit if there's unpushed/uncommited changes on the local branch*)
+```bash
+git pull
+```
+
+## **VII. Compare (Diff)**
+
+- Diff all changes between files in the current working directory vs already committed (*only works before git add*)
+```bash
+git diff
+
+# To diff a specific file: git diff <fileName>
+```
+
+- Diff 2 commits in history
+```bash
+git diff <olderCommitHash> <newerCommitHash>
+
+# eg: git diff 12345 67890
+```
+
+## **VIII. Pushing**
+
+- Push local changes to the upstream remote branch
+```bash
+# Step 1: Check state of the current branch (any unpushed commits, untracked files)
+git status
+
+# Step 2: Push to upstream remote branch
+git push <remoteName> <branchName>
+```
+
+## **IX. Merging**
+
+- Rebase a branch into the current working branch (*Reapply local commits on top of pushed commits*)
+```bash
+git rebase <remoteName> <branchName>
+
+# eg: git rebase origin feature-branch
+```
+
+- Merge a branch into the current working branch w/o conflict (*when the working branch and current branch has no conflicts*)
+```bash
+# Step 1: Merge a local branch
+git merge <branchName>
+
+# Step 2 option a (Prefer): Merge the remote branch with the "no fast forward" flag to preserve history of commits
+git git merge <remoteName> <branchName> --no-ff
+
+# Step 2 option b: Merge the remote branch
+git merge <remoteName> <branchName>
+```
+
+- Cherry picking commit from a branch and place them on top of the current branch
+```bash
+git cherry-pick <commitHash>
+
+# eg: git cherry-pick 12345 
+```
+
+- Partial cherry picking (*Same as cherry picking but you only want some of the files. All files will be marked as modified, which you can then add and commit only files you want.*)
+```bash
+git cherry-pick -n <commitHash>
+
+# eg: git cherry-pick -n 12345 
+```
+
+## **X. List commits**
 
 - List commits begin from the latest
 ```bash
@@ -150,7 +246,7 @@ git log <commitHash>
 git log --author="<userName>"
 ```
 
-## **V. Delete a branch**
+## **XI. Delete a branch**
 
 - Delete a local branch w/o any unmerged changes (*the branch won't be deleted on remote repo*)
 ```bash
@@ -176,7 +272,7 @@ git push -d <remoteName> <branchName>
 # eg: git push origin :branch-to-delete 
 ```
 
-## **VI. Rename a branch**
+## **XII. Rename a branch**
 
 - Rename current local branch (*will not rename remote branch*)
 ```bash
