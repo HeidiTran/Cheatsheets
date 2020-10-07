@@ -213,6 +213,22 @@ git git merge <remoteName> <branchName> --no-ff
 git merge <remoteName> <branchName>
 ```
 
+- Merge a branch into the current working branch with conflicts (*when the working branch and current branch haave conflicts*)
+```bash
+# Step 1: Merge local branch
+git merge <branchName> --no-ff
+git mergetool
+
+# Step 2: Merge remote branch
+git merge <remoteName> <branchName> --no-ff
+git mergetool
+```
+
+- Abort a merge attempt
+```bash
+git merge --abort
+```
+
 - Cherry picking commit from a branch and place them on top of the current branch
 ```bash
 git cherry-pick <commitHash>
@@ -227,7 +243,101 @@ git cherry-pick -n <commitHash>
 # eg: git cherry-pick -n 12345 
 ```
 
-## **X. List commits**
+## **X. Clean up branches**
+
+- Revert local changes for a single file
+```bash
+git checkout <filePath>
+
+# To revert for multiple files: git checkout -- <file1Path> <file2Path>
+```
+
+- Revert/Restore a file to a specific commit
+```bash
+git checkout <commitHash> <filePath>
+
+# eg: git checkout f123c3 test.txt
+
+# To revert/restore for multiple files: git checkout <commitHash> -- <file1Path> <file2Path>
+```
+
+- Remove untracked files from the current working branch
+```bash
+git clean -df <filePath>
+
+# To remove untracked files from a folder and downward: git clean -df <folderPath>
+# eg: git clean -df src/app 
+```
+
+- Reset HEAD of the current branch to a specific state
+```bash
+# Option 1: Delete any commits or staged changes (Useful when you want to revert a `git add` command)
+git reset
+
+# Option 2: Remove all changes on the current branch -> Local HEAD = remote HEAD
+git reset --hard
+
+# Option 3: Remove all changes on the current branch and revert to the current state of a specific remote branch
+git reset --hard <remoteName>/<branchName>
+
+# eg: git reset --hard origin/new-feature
+```
+## **XI. Stashing**
+
+- Stack the changes in a dirty working directory
+```bash
+# Option 1 (Prefer): Create a named stash
+git stash save "<stashName>"
+
+# Option 2: Create an anonymous stash
+git stash
+
+# eg: git stash save "myStash"
+```
+
+- View the list of stashed changes
+```bash
+git stash list
+```
+
+- List all files that were in the stash entry from the most recent stash
+```bash
+git stash show -p
+```
+
+- List all files that were in the stash entry from a specific stash
+```bash
+git stash show -p stash@{<stashId>}
+
+# eg: git stash show -p stash@{1}
+```
+
+- Apply stashed changes from a stash to the current working directory (*Does not remove this stash entry from the stash stack*)
+```bash
+# Option 1: Apply the most recent stash entry
+git stash apply
+
+# Option 2: Apply a specific stash
+git stash apply stash@{<stashId>}
+```
+
+- Pop stashed changes: Similar to apply stashed but remove the stash entry from the stash stack
+```bash
+# Option 1: Pop the most recent stash entry
+git stash pop
+
+# Option 2: Pop a specific stash
+git stash pop stash@{<stashId>}
+```
+
+- Delete a stash from the stash stack
+```bash
+git stash drop stash@{<stashId>}
+
+# eg: git stash drop stash@{1}
+```
+
+## **XII. List commits**
 
 - List commits begin from the latest
 ```bash
@@ -246,7 +356,7 @@ git log <commitHash>
 git log --author="<userName>"
 ```
 
-## **XI. Delete a branch**
+## **XIII. Delete a branch**
 
 - Delete a local branch w/o any unmerged changes (*the branch won't be deleted on remote repo*)
 ```bash
@@ -272,7 +382,7 @@ git push -d <remoteName> <branchName>
 # eg: git push origin :branch-to-delete 
 ```
 
-## **XII. Rename a branch**
+## **XIV. Rename a branch**
 
 - Rename current local branch (*will not rename remote branch*)
 ```bash
