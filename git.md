@@ -179,6 +179,10 @@ git diff
 git diff <olderCommitHash> <newerCommitHash>
 
 # eg: git diff 12345 67890
+
+# To show only file name add the flag: git diff --name-only <olderCommitHash> <newerCommitHash>
+
+# To show only from a folder downward: git diff <olderCommitHash> <newerCommitHash> <path>
 ```
 
 ## **VIII. Pushing**
