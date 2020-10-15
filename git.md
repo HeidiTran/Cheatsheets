@@ -126,6 +126,11 @@ git commit -m "<message>"
 git commit
 ```
 
+- Revert a commit and keeping all changes (*only applicable if it hasn't been pushed and is the latest commit on the current branch*)
+```bash
+git reset HEAD~1 --soft
+```
+
 - Revert a commit (*even after it has been pushed*)
 ```bash
 git revert <commitHash>
