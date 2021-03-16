@@ -93,7 +93,16 @@ git checkout <branchName>
 git checkout -t <remoteName>/<branchName>
 
 # eg: git checkout -t origin/a-different-feature
+# -t is equivalent to --track -> 
 ```
+
+- Switch to a branch on a different remote endpoint
+```bash
+git checkout -b <branchName> -t <remoteName>/<branchName>
+
+# eg: git checkout -b new-feature -t myNewSquadRepo/new-feature
+```
+
 
 ## **V. Committing**
 
@@ -151,6 +160,13 @@ git push --force <remoteName> <branchName>
 git fetch <remoteName>
 
 # eg: git fetch origin
+```
+
+- Fetch all branches **and delete references to remote branches that has been deleted** (***Prefer***): Update references and histories of remote branches (*Won't pull in changes into local branches*)
+```bash
+git fetch <remoteName> --prune
+
+# eg: git fetch origin --prune
 ```
 
 - Fetch a branch: Update references and histories the remote branch (*Won't pull in changes into the local branch*)
@@ -422,5 +438,34 @@ git push -u <remoteName> <newBranchName>
 # 	git branch -m new-shiny-name
 # 	git push -d origin old-name
 # 	git push -u origin new-shiny-name
+```
+
+## **XV. Remote Repo**
+
+- List all remote endpoint (all possible \<remoteName>)
+```bash
+git remote -v
+```
+
+- List all branches a remote endpoint
+```bash
+git show remote <remoteName>
+
+# eg: git show remote origin
+```
+
+- Add a remote endpoint
+```bash
+git remote add <aRemoteNameYouWantToUse> <endpoint>
+
+# eg: git remote add myNewSquadRepo ssh://....git
+```
+
+- Change remote endpoint URL. Useful for changing Url from Https -> SSH
+
+```bash
+git remote set-url <remoteName> <newUrl>
+
+# eg: git remote set-url origin git@github.com:HeidiTran/Cheatsheets.git
 ```
 
