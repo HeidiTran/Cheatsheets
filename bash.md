@@ -20,11 +20,24 @@ fi
 
 ## **II. Curl**
 ```bash
-curl -k
+curl -k -s <url>
+
 # -k, --insecure -> Allow connections to SSL sites without certs
+# -s, --silent -> Silent mode. Don't output anything
+
+# eg: json_res=$(curl -k -s "https://"${server}"/abcd.com")
 ```
 
-## **III. Miscellaneous**
+## **III. Python**
+- Parse JSON
+```bash
+# We have a JSON obj store in a var called json_res
+
+accessToken=$(echo ${json_res} | python -c "import sys, json; obj = json.loads(\"\"\"$json_res\"\"\")["accessToken"]; print(obj)")
+
+```
+
+## **IV. Miscellaneous**
 - Show help/usage text
 ```bash
 HELPTEXT="
@@ -48,3 +61,4 @@ then
     exit 0;
 fi
 ```
+
