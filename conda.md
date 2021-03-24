@@ -20,3 +20,29 @@ conda activate your-env-name
 ```bash
 conda deactivate
 ```
+
+- Delete an environment
+```bash
+conda env remove -n your-env-name
+
+# -n, --name: name of the environment
+```
+
+- List all packages in an environment
+```bash
+conda list -n your-env-name
+```
+
+- Export an environment
+```bash
+conda env export > environment.yml
+
+# this will exports a list of dependencies to the file `environment.yml`
+```
+
+- Import an environment
+```bash
+conda env create -f environemnt.yml
+
+# `environment.yml` is the file contains all the dependencies for the environment
+```
