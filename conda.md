@@ -28,11 +28,6 @@ conda env remove -n your-env-name
 # -n, --name: name of the environment
 ```
 
-- List all packages in an environment
-```bash
-conda list -n your-env-name
-```
-
 - Export an environment
 ```bash
 conda env export > environment.yml
@@ -45,4 +40,20 @@ conda env export > environment.yml
 conda env create -f environemnt.yml
 
 # `environment.yml` is the file contains all the dependencies for the environment
+```
+
+## **II. Packages**
+- List all packages in an environment
+```bash
+conda list -n your-env-name
+```
+
+- Install a package
+```bash
+conda install <package name>
+```
+
+- Update a package
+```bash
+conda update <package name>
 ```
