@@ -28,6 +28,12 @@ pd.notnull(data)
 
 # Reindex
 data.reindex(['a', 'b', 'c'])
+
+# Get all unique values
+data.unique()
+
+# Filter
+data.isin([1, 6])
 ```
 
 - Access by index
@@ -36,6 +42,15 @@ data.reindex(['a', 'b', 'c'])
 # Access with the custom index
 data = Series([1, 2, 3, 4], index = ['a', 'b', 'c', 'd'])
 data['b'] # -> 2
+```
+
+- Sort 
+```python
+# By index
+data.sort_index()
+
+# By values. Note that missing values are sorted to the end
+data.sort_values()
 ```
 
 ## **III. Data Frame**
@@ -64,12 +79,14 @@ df.columns.name     # Col label name
 df.values           # Get all the data by rows
 df.info()           # Describe indexes
 df.head()           # Get the first 5 rows
+df.tail()           # Get the last 5 rows
 df.count()          # Number of non-NA values
+df.describe()       # Summary statistics
 
-df.sum()
+# NA are exclude by default -> change by setting skipna = False
+df.sum()            # To sum by columns, pass in axis='columns'
 df.min()
 df.max()
-df.describe()       # Summary statistics
 df.mean()
 df.median()
 ```
@@ -83,7 +100,7 @@ df['year']      # equivalent to df.year
 df[['state', 'pop']]
 
 # Get a row by using the custom row's label
-df.loc[0]
+df.loc['one']
 
 # Get a subset of rows and cols with loc[rows, cols]
 df.loc([['one', 'three'], ['pop', 'state']])
@@ -113,8 +130,26 @@ df.drop('debt', axis='columns') # equivalent to df.drop('debt', axis=1)
 # Drop multiple cols
 df.drop(['year', 'debt'], axis=1)
 
+# Add a new row
+newRow = {'state': ['WA'], 'year': 4, 'pop': [1.5]}
+df1 =  DataFrame(newRow, columns = ['year', 'state', 'pop'], index = ['four'])
+df = df.append(df1)
+
 # Delete a row. If pass in inplace = True -> will not return a new df
 df = df.drop('two')     # To delete multiple rows: df.drop(['one', 'two'])
+```
+
+- Sort
+```python
+# Sort by rows' labels
+df.sort_index()     # equivalent to df.sort_index(axis = 0)
+
+# Sort by cols' labels. `ascending` default to True
+df.sort_index(axis = 1, ascending = False)
+
+# Sort by one or many columns. `ascending` default to True
+df.sort_values(by = 'pop', ascending = False)
+df.sort_vlaues(by = ['pop', 'debt'])
 ```
 
 - Common functionalities
@@ -128,3 +163,12 @@ df.reindex(columns = ['pop', 'state', 'year'])
 # Apply a function on each elem
 df.applymap(lambda x: x * 2)
 ```
+
+## **Plot**
+```python
+# If in IPython
+%pylab
+```
+
+- Line plots
+- Bar plots
