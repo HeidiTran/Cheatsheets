@@ -170,5 +170,20 @@ df.applymap(lambda x: x * 2)
 %pylab
 ```
 
-- Line plots
-- Bar plots
+`kind` can be `'area', 'bar', 'barh', 'density', 'hist', 'line', 'pie', 'kde'`
+
+- Series
+```python
+# For Series, index (label) will be the x-axis 
+s = pd.Series(np.random.randn(10).cumsum(), index=np.arange(0, 100, 10))
+s.plot(kind = 'line', alpha = 1)
+```
+- Data Frame
+```python
+# For DataFrame, columns will be different line and index (label) will be the x-axis
+df.plot(kind = 'line', title = 'My Plot title', legend = True)
+
+#eg:
+# Stack horizonal bar plot
+df.plot(kind = 'bar', stacked = True)
+```
