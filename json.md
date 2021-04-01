@@ -3,15 +3,32 @@
 import json
 ```
 
-## **II. Open**
+## **II. Deserialize**
+- Deserialize a JSON file to a Python obj
 ```python
-json.load(open("data.json", "r"))
+data = json.load(open("data.json", "r"))
 ```
 
-## **III. Write**
-- Store a list of dictionaries as a JSON
+- Deserialize a string containing JSON obj to a Python obj
 ```python
-json.dump(listOfDict, open("result.json", "w"))
+json.loads(...)
 
-# eg: listOfDict = [{ 'id' : 1, 'name' : 'apple' }, { 'id' : 2, 'name' : 'cake' }]
+# eg:
+with open('data.json', 'r', encoding = 'utf-8') as f:
+    for line in f:
+        # type of json.loads(line) is a dict
+        print(json.loads(line))
+```
+
+## **III. Serialize**
+- Serialize a Python obj to a JSON file
+```python
+json.dump(data, open("result.json", "w"))
+
+# eg: data = [{ 'id' : 1, 'name' : 'apple' }, { 'id' : 2, 'name' : 'cake' }]
+```
+
+- Serialize a Python obj to a JSON formatted string
+```python
+json.dumps(data)
 ```
