@@ -28,6 +28,11 @@ curl -k -s <url>
 # eg: json_res=$(curl -k -s "https://"${server}"/abcd.com")
 ```
 
+- Download to a file
+```bash
+curl <url> > file.mp3
+```
+
 ## **III. Python**
 - Parse JSON
 ```bash
