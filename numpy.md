@@ -50,6 +50,8 @@ Index with `[]` like normal multidimension array works
 Preferred using a comma-separated list of indices
 Given a 2 x 3 x 4 matrix `data` -> bottom right elem would be `data[2, 3, 4]`
 
+Fancy Indexing: If you want to select third elem, first elem, 20th elem in that order -> `data[[3, 1, 20]]`
+
 - Slicing
 
 **NOTE**: normal slicing eg: `data[m:n]` will give you a view, which means any changes made to this slice will modify the original matrix. If you want to get a deep copy -> `data[m:n].copy()`
@@ -75,21 +77,45 @@ data.sort(0)    # will sort along the first axis (eg: row)
 np.unique(data) # return SORTED unique values
 ```
 
+- Find with `where`
+```python
+# Return the index of data that satisfy boolean condition
+np.where(data > 10)
+```
+
+- Replace with `where`
+```python
+np.where(data > 10, 10, data)
+
+# This is equivalent to data = 10 if data > 10 else data
+```
+
 ## **III. Working with files**
 - Save ndarray to a file without compressing
 ```python
 np.save('file name without extension', data) # will save to a file with .npy extension
 ```
 
-- Load from a file
+- Load ndarray from `npy` file
 ```python
 np.load('data.npy')
+```
+
+- Load files (csv, tsv, etx.) 
+```python
+data = np.loadtxt('file.csv', delimiter = ',')
 ```
 
 ## **IV. Common Math Funct**
 - Basic
 ```python
 data.mean(axis = 1)
-data.sum(axis = 0)
+data.sum(axis = 0)  # We can passed in condition: np.sum(data > 10, axis = 0)
 data.min(axis = 0)
 ```
+
+- Random Seed
+```python
+np.random.seed(1234)
+```
+
