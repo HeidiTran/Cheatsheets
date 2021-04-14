@@ -29,7 +29,7 @@ np.identity(n)
 
 - Get dimension
 ```python
-data.shape
+data.shape      # return (# of row, # of col)
 ```
 
 - Get datatype
@@ -42,6 +42,21 @@ data.dtype
 # eg: Convert array of strings to arrya of number
 arrayOfStrings.astype(float)
 ```
+
+- **IMPORTANT: NUMPY AXES ARE DIFFERENT!**
+
+For 2D array:
+
+Pass in `axis = 0` will apply functions to **column**
+
+Pass in `asis = 1` will apply funcitons to **row**
+![](numpy_axes.png)
+
+For 1D array:
+
+Since there is only one axis. Pass in `axis = 0` will apply functions to **row**
+
+![](numpy_axes_1D_array.png)
 
 - Index
 
@@ -69,7 +84,7 @@ data[(names == 'Bob') | (names == 'Will')]
 - Sort
 ```python
 # Sort along an axis
-data.sort(0)    # will sort along the first axis (eg: row)
+data.sort(0)    # will sort along the first axis (eg: column)
 ```
 
 - Unique
