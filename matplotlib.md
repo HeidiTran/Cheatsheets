@@ -14,6 +14,9 @@ import matplotlib.pyplot as plt
 # Create new figure
 fig = plt.figure()
 
+# Add an overall title to figure
+fig.suptitle("Overall title")
+
 # Create subplot(s)
 # This means the figure should be 2 x 2 -> contains 4 plots. The last param denote the subplot we're selecting
 ax1 = fig.add_subplot(2, 2, 1)
