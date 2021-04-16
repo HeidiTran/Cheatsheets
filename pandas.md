@@ -74,11 +74,11 @@ df = DataFrame(data, columns = ['year', 'state', 'pop'], index = ['one', 'two', 
 df.shape            # shape (rows, cols)
 df.index            # Get the row index (label)
 df.columns          # Get the col index
+df.columns.values   # Col label name
 df.index.name       # Row label name
-df.columns.name     # Col label name
 df.values           # Get all the data by rows
 df.info()           # Describe indexes
-df.head()           # Get the first 5 rows
+df.head()           # Get the first 5 rows. To get `n` rows: df.head(n)
 df.tail()           # Get the last 5 rows
 df.count()          # Number of non-NA values
 df.describe()       # Summary statistics
@@ -120,6 +120,9 @@ df[df['pop'] > 1]
 # Add a new col -> new col must be a pd's Series + MUST use [] instead of . notation
 # index parameter is REQUIRED for correct rows mapping
 df['debt'] = pd.Series([1, 2, 3], index=['one', 'two', 'three'])
+
+# Clone a col to a new col
+df['new col'] = df['debt']
 
 # Delete a col
 del df['debt']  # equivalent to del df.debt
@@ -186,4 +189,67 @@ df.plot(kind = 'line', title = 'My Plot title', legend = True)
 #eg:
 # Stack horizonal bar plot
 df.plot(kind = 'bar', stacked = True)
+```
+
+## **Files**
+- Read and Write to CSV
+```python
+# Read a file without header
+pd.read_csv('file.csv', header = None, index_col = None)
+
+# If the first row of the file is header -> header = 0
+pd.read_csv('file.csv', header = 0)
+
+# If want to use your own headers
+pd.read_csv('file.csv', names = ['pop', 'state', 'debt'])
+
+# If want to use column 0 as index -> index_col = 1
+pd.read_csv('file.csv', header = None, index_col = 1)
+
+# Skip rows -> pass in row indexes
+pd.read_csv('file.csv', skiprows = [0, 2, 3])
+
+# Read only the first n rows
+pd.read_csv('file.csv', nrows = 5)
+
+# Specify delimiter/separator of the file
+pd.read_csv('file.csv', delimiter = '\t')
+```
+
+```python
+# Write
+df.to_csv('file.csv')   # to write to console: to_csv(sys.stdout)
+
+# Specify the delimiter/separator of the file
+df.to_csv('file.csv', sep = '|')
+
+# Not write header and indexes to file
+df.to_csv('file.csv', index = False, header = False)
+```
+
+- Read/Write for other type of files
+```python
+# Read Excel XLS or XLSX
+pd.read_excel('file.xlsx', 'Sheet1')
+df.to_excel('file.xlsx', 'Sheet1')
+
+# Read a JSON string representation
+pd.read_json('file.json')
+df.to_json()
+
+# Read HDF5 
+pd.read_hdf
+
+# Read HTML (only read in <table> tag)
+pd.read_html('file.html')
+```
+
+## **EDA**
+- Count observations (rows) by group
+```python
+# return a Pandas Series
+df.groupby('state').size()
+
+# return a Pandas Data Frame
+df.groupby('state').size().reset_index(name = '# of observations')  # give the count colum `# of observations` label
 ```
