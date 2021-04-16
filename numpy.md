@@ -17,7 +17,10 @@ data = np.array(pydata)
 # An 2x3x2 matrix of all 0s. If use ones() -> a matrix of all 1s
 data = np.zeros((2, 3, 2)) 
 
-# one dimension of numbers [0...n]
+# 1D of continuous numer [a, b] with x steps
+data = np.arange(start, end, step)
+
+# 1D of numbers [0...n]
 data = np.arange(n)     # To turn into a matrix a x b: np.arrange(n).reshape(a, b)
 
 # 2x3 matrix of random data

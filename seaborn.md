@@ -39,3 +39,9 @@ sns.displot(tips['total_bill'], bins=100, color='k')
 sns.factorplot(x='day', y='total_bill', col='smoker', kind='bar', data = tips)
 sns.factorplot(x='day', y='total_bill', col='smoker', kind='box', data = tips)
 ```
+
+## **IV. Customize plot**
+- Title
+```python
+plt.title("Plot title")
+```
