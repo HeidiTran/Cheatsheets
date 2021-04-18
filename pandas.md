@@ -16,9 +16,20 @@ data = Series([1, 2, 3], index = ['a', 'b', 'c'])
 data = Series({ 'a' : 1, 'b' : 2, 'c' : 3 }, index = ['c', 'b', 'a']) 
 ```
 
-- Basic Information
+- Index object
 ```python
-data.index      # Index
+# Get
+data.index     
+
+# Update
+pd.Series(data, index = ['d', 'e', 'f'])
+
+# Reindex: Create a new obj with the data ordered according to the new index
+data.reindex(['a', 'b', 'c'])
+
+# Reindex + filling values
+obj = Series(['blue', 'purple', 'yellow'], index = [0, 2, 4])
+obj.reindex(range(6), method = 'ffill')
 ```
 
 - Common functionalities
@@ -26,14 +37,20 @@ data.index      # Index
 # Check if any data's values is null
 pd.notnull(data)
 
-# Reindex
-data.reindex(['a', 'b', 'c'])
-
 # Get all unique values
 data.unique()
 
 # Filter
 data.isin([1, 6])
+
+# Rank
+data = Series([7, -5, 7, 4, 2, 0, 4])
+data.rank()     # The smallest value get rank 1. Break ties by the mean rank
+data.rank(method = 'first') # The smallest value get rank 1. Break ties on the smaller index
+data.rank(method = 'max')   # The largest value get rank 1
+
+# Apply a function on each elem (only works on Series)
+data.map(lambda x : '%.2f' % x)
 ```
 
 - Access by index
@@ -93,6 +110,12 @@ df.median()
 
 - Indexing
 ```python
+# Get the column index of a column
+df.columns.get_loc('pop')
+
+# Get the row index of the max value in a column
+df['pop'].idxmax()
+
 # Get a column (a series) by using the col's label -> return a view NOT a deep copy
 df['year']      # equivalent to df.year
 
@@ -104,6 +127,10 @@ df.loc['one']
 
 # Get a subset of rows and cols with loc[rows, cols]
 df.loc([['one', 'three'], ['pop', 'state']])
+
+# Get range of rows
+df.iloc[:10, :]     # Return first 10 rows and all columns
+df.iloc[10 : 20, ['pop', 'state']]  # Return the pop and state column of the 10th - 20th row
 ```
 
 - Slicing
@@ -142,6 +169,20 @@ df = df.append(df1)
 df = df.drop('two')     # To delete multiple rows: df.drop(['one', 'two'])
 ```
 
+- Index Object
+```python
+df = DataFrame(np.arange(9).reshape(3, 3), index = ['a', 'c', 'd'], columns = ['O', 'T', 'C'])
+
+# Reindex row
+df.reindex(['a', 'd', 'c'])
+
+# Reindex column
+df.reindex(columns = ['T', 'C', 'O'])
+
+# Add a new column with fill_value
+df.reindex(columns = ['T', 'C', 'O'], fill_value = 0)
+```
+
 - Sort
 ```python
 # Sort by rows' labels
@@ -163,8 +204,17 @@ df.reindex(['two', 'one', 'three'])
 # Reindex columns
 df.reindex(columns = ['pop', 'state', 'year'])
 
-# Apply a function on each elem
+# Count the number of rows in each group of a categorical column
+df['state'].value_counts()
+
+# Apply a function for each elem (only works for DataFrame)
 df.applymap(lambda x: x * 2)
+
+# Apply a function on each column (works for both DataFrame + Series)
+df.apply(lambda x : x.max() - x.min())
+
+# Apply a function on each row (works for both DataFrame + Series)
+df.apply(lambda x : x.max() - x.min(), axis = 'columns')
 ```
 
 ## **Plot**
