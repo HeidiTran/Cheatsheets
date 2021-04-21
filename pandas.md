@@ -27,7 +27,7 @@ pd.Series(data, index = ['d', 'e', 'f'])
 # Reindex: Create a new obj with the data ordered according to the new index
 data.reindex(['a', 'b', 'c'])
 
-# Reindex + filling values
+# Reindex + filling values (only works on rows)
 obj = Series(['blue', 'purple', 'yellow'], index = [0, 2, 4])
 obj.reindex(range(6), method = 'ffill')
 ```
@@ -173,14 +173,20 @@ df = df.drop('two')     # To delete multiple rows: df.drop(['one', 'two'])
 ```python
 df = DataFrame(np.arange(9).reshape(3, 3), index = ['a', 'c', 'd'], columns = ['O', 'T', 'C'])
 
-# Reindex row
+# Reindex row. New label with result in a new row with NaN value
 df.reindex(['a', 'd', 'c'])
 
-# Reindex column
+# Add a new row filling in with values instead of NaN. 'ffill' will duplicate the value of the rows before the empty row to the empty row
+df.reindex(['a', 'd', 'c'], method = 'ffill')
+
+# Reindex column. New label will result in a new col with NaN value
 df.reindex(columns = ['T', 'C', 'O'])
 
-# Add a new column with fill_value
+# Add a new column with fill_value value instead of NaN
 df.reindex(columns = ['T', 'C', 'O'], fill_value = 0)
+
+# Update the row label (index) to a new value
+df.index = [20, 21, 22]
 ```
 
 - Sort
