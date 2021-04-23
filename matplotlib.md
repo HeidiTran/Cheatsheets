@@ -82,6 +82,7 @@ ax1.plot(data, linestyle = '--', color = 'g', marker = 'o')
 
 # Legend for each line/bar category/etc
 ax1.plot(data, label = 'Female')
+ax1.plot(data1, label = 'Male')
 ax1.set(xlabel = 'X-Axis', ylabel = 'Y-Axis')
 
 # Legend's location

@@ -232,7 +232,7 @@ git rebase <remoteName> <branchName>
 git merge <branchName>
 
 # Step 2 option a (Prefer): Merge the remote branch with the "no fast forward" flag to preserve history of commits
-git git merge <remoteName> <branchName> --no-ff
+git merge <remoteName> <branchName> --no-ff
 
 # Step 2 option b: Merge the remote branch
 git merge <remoteName> <branchName>

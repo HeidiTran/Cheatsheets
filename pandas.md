@@ -240,11 +240,16 @@ s.plot(kind = 'line', alpha = 1)
 - Data Frame
 ```python
 # For DataFrame, columns will be different line and index (label) will be the x-axis
-df.plot(kind = 'line', title = 'My Plot title', legend = True)
+df.plot(kind = 'line', title = 'My Plot title', legend = True, marker = 'o')
 
-#eg:
 # Stack horizonal bar plot
-df.plot(kind = 'bar', stacked = True)
+df.plot(kind = 'bar', stacked = True, color = 'mediumvioletred')
+
+# Histogram
+df.plot(kind = 'hist')
+
+# Scatterplot for 2 continuous data
+df.plot(kind = 'scatter', x = 'points', y = 'price', linestyle = '--')
 ```
 
 ## **Files**
