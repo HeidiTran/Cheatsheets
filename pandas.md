@@ -32,11 +32,29 @@ obj = Series(['blue', 'purple', 'yellow'], index = [0, 2, 4])
 obj.reindex(range(6), method = 'ffill')
 ```
 
+- Working with missing/duplicated data
+```python
+# Check if any data's values is null/not null
+data.isnull()   # equiv to pd.isnull(data)
+data.notnull()   # equiv to pd.notnull(data) 
+
+# Drop missing data -> return a new Series with only non-null data
+data = data.dropna()
+
+# Fill missing value 
+data.fillna(data.mean())    # with mean
+data.fillna(method = 'ffill')   # with `ffill` method
+
+# Replace
+data.replace([-200, -201], 200) # replace all -200 and -201 with 200
+data.replace({-200: 200, -201: 201})
+
+# Check whether a row is a duplicate -> return a boolean Series
+data.duplicated()
+```
+
 - Common functionalities
 ```python
-# Check if any data's values is null
-pd.notnull(data)
-
 # Get all unique values
 data.unique()
 
@@ -69,6 +87,20 @@ data.sort_index()
 # By values. Note that missing values are sorted to the end
 data.sort_values()
 ```
+
+- Binning
+```python
+# Cut into custom bin size
+ages = [20, 22, 25, 27, 21, 23, 37, 31, 61, 45, 41, 32]
+bins = [18, 25, 35, 60, 100]
+cats = pd.cut(ages, bins, labels = ['Youth', 'YoungAdult', 'MiddleAged', 'Senior']) # [(18, 25], (18, 25], (18, 25], (25, 35], (18, 25], ..., (25, 35], (60, 100], (35, 60], (35, 60], (25, 35]]
+
+
+
+# Count number of values in each bin
+pd.value_counts(cats)
+```
+
 
 ## **III. Data Frame**
 Are built from Series. Each series is a column. Can be thought of as a dict of Series sharing the same index (row index)
@@ -187,6 +219,9 @@ df.reindex(columns = ['T', 'C', 'O'], fill_value = 0)
 
 # Update the row label (index) to a new value
 df.index = [20, 21, 22]
+
+# Rename -> without inplace, `rename` will return a new df
+df.rename({index = {'one': 'ONE'}, inplace = True})
 ```
 
 - Sort
@@ -197,19 +232,45 @@ df.sort_index()     # equivalent to df.sort_index(axis = 0)
 # Sort by cols' labels. `ascending` default to True
 df.sort_index(axis = 1, ascending = False)
 
-# Sort by one or many columns. `ascending` default to True
-df.sort_values(by = 'pop', ascending = False)
-df.sort_vlaues(by = ['pop', 'debt'])
+# Sort by one or many columns' values. `ascending` default to True
+# If pass in multiple columns -> priority goes from left to right
+# Default inplace = False -> so return a new df
+df.sort_values(by = 'pop', ascending = False, inplace = True)
+df.sort_values(by = ['pop', 'debt'])
+```
+
+- Working with missing/duplicated data
+```python
+# Check if any data's values is null/not null
+df.isnull()   # equiv to pd.isnull(df)
+df.notnull()   # equiv to pd.notnull(df) 
+
+# Drop ANY rows containing a missing value
+df = df.dropna()
+
+# Drop only rows that are all NA
+df = df.dropna(how = 'all')
+
+# Drop rows containing more than 2 # of not NA
+df = df.dropna(thresh = 2)
+
+# Drop only cols that are all NA
+df = df.dropna(axis = 1, how = 'all')
+
+# Fill missing value with 0 / Fill different missing value for different column
+df.fillna(0)
+df.fillna({'pop': 1, 'debt': 0}) # Fill column 'pop' with 1
+
+# Check whether a row is a duplicate -> return a boolean Series
+df.duplicated()
+
+# Drop all duplicated rows
+df = df.drop_duplicates()
+df = df.drop_duplicates(['state'])  # only drop rows where state col is duplicated
 ```
 
 - Common functionalities
 ```python
-# Reindex rows
-df.reindex(['two', 'one', 'three'])
-
-# Reindex columns
-df.reindex(columns = ['pop', 'state', 'year'])
-
 # Count the number of rows in each group of a categorical column
 df['state'].value_counts()
 
