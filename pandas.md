@@ -68,7 +68,8 @@ data.rank(method = 'first') # The smallest value get rank 1. Break ties on the s
 data.rank(method = 'max')   # The largest value get rank 1
 
 # Apply a function on each elem (only works on Series)
-data.map(lambda x : '%.2f' % x)
+data = data.map(lambda x : '%.2f' % x)
+data = data.map({ 'FALSE': False, 'TRUE': True})    # Convert
 ```
 
 - Access by index
@@ -171,6 +172,7 @@ df.iloc[10 : 20, ['pop', 'state']]  # Return the pop and state column of the 10t
 df['year':'state']
 
 # Using boolean expression
+# NOTE: `|` replaces `or` and `&` replaces `and` 
 df[df['pop'] > 1]
 ```
 
@@ -201,6 +203,15 @@ df = df.append(df1)
 df = df.drop('two')     # To delete multiple rows: df.drop(['one', 'two'])
 ```
 
+- Extend
+```python
+# Concat 2 or more DataFrame with similar columns' labels
+newDf = pd.concat([df1, df2])
+
+# Concat 2 or more DataFrame with similar rows' labels
+newDf = pd.concat([df1, df2], axis = 1)
+```
+
 - Index Object
 ```python
 df = DataFrame(np.arange(9).reshape(3, 3), index = ['a', 'c', 'd'], columns = ['O', 'T', 'C'])
@@ -221,7 +232,8 @@ df.reindex(columns = ['T', 'C', 'O'], fill_value = 0)
 df.index = [20, 21, 22]
 
 # Rename -> without inplace, `rename` will return a new df
-df.rename({index = {'one': 'ONE'}, inplace = True})
+df.rename(index = {'one': 'ONE'}, inplace = True)
+df.rename(columns = {'pop': 'population'}, inplace = True})
 ```
 
 - Sort
@@ -303,11 +315,14 @@ s.plot(kind = 'line', alpha = 1)
 # For DataFrame, columns will be different line and index (label) will be the x-axis
 df.plot(kind = 'line', title = 'My Plot title', legend = True, marker = 'o')
 
+# Bar plot
+df.plot(kind = 'bar', x = 'state', y = 'pop')
+
 # Stack horizonal bar plot
 df.plot(kind = 'bar', stacked = True, color = 'mediumvioletred')
 
 # Histogram
-df.plot(kind = 'hist')
+df.plot(kind = 'hist', figsize=(5,5)
 
 # Scatterplot for 2 continuous data
 df.plot(kind = 'scatter', x = 'points', y = 'price', linestyle = '--')

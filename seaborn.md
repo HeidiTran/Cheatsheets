@@ -7,6 +7,11 @@ import seaborn as sns
 ```
 
 ## **II. Figure Aesthetics**
+- Size
+```python
+sns.set(rc={"figure.figsize":(12, 10)})
+```
+
 - Styles
 ```python
 # Set default style

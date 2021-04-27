@@ -22,6 +22,9 @@ fig.suptitle("Overall title")
 ax1 = fig.add_subplot(2, 2, 1)
 ax2 = fig.add_subplot(2, 2, 2)
 ax3 = fig.add_subplot(2, 2, 3)
+
+# Set figure size
+plt.figure(figsize=(12, 10))
 ```
 
 All of the above could be short-handed
@@ -88,10 +91,14 @@ ax1.set(xlabel = 'X-Axis', ylabel = 'Y-Axis')
 # Legend's location
 ax1.legend(loc = 'best')
 
-# Ticks
+# Ticks (set_yticks for y axis)
 ax1.set_xticks([0, 25, 50, 75, 100])
 ax1.set_xticklabels(["low", 25, "mid", 75, "hi"], rotation = 30, fontsize = 'small')
 ax1.set_xlabel('Cost')
+
+# Format ticks' labels
+yAxixFormatter = FuncFormatter(lambda x, pos : int(x))  # `x` is the value, `pos` is tick position
+ax1.yaxis.set_major_formatter(yAxixFormatter)
 
 # Subplot title
 ax1.set_title("My plot title")
