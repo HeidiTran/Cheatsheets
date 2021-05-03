@@ -21,15 +21,21 @@ data = Series({ 'a' : 1, 'b' : 2, 'c' : 3 }, index = ['c', 'b', 'a'])
 # Get
 data.index     
 
+# Set
+index = pd.Index([0, 1, 2, 3])
+df = df.set_index(index)
+
 # Update
 pd.Series(data, index = ['d', 'e', 'f'])
 
-# Reindex: Create a new obj with the data ordered according to the new index
+# Reindex
+# Create new rows of all `null` for the values in newInd that aren't in df's index
+# For in newInd that already exists in df's index -> reorder rows
 data.reindex(['a', 'b', 'c'])
 
 # Reindex + filling values (only works on rows)
 obj = Series(['blue', 'purple', 'yellow'], index = [0, 2, 4])
-obj.reindex(range(6), method = 'ffill')
+obj.reindex(range(6), method = 'ffill') # creates a new row for a new label with the values in the prev row according to the numerical order of df's index
 ```
 
 - Working with missing/duplicated data
@@ -319,7 +325,7 @@ df.plot(kind = 'line', title = 'My Plot title', legend = True, marker = 'o')
 df.plot(kind = 'bar', x = 'state', y = 'pop')
 
 # Stack horizonal bar plot
-df.plot(kind = 'bar', stacked = True, color = 'mediumvioletred')
+df.plot(kind = 'barh', stacked = True, color = 'mediumvioletred')
 
 # Histogram
 df.plot(kind = 'hist', figsize=(5,5)
@@ -351,6 +357,9 @@ pd.read_csv('file.csv', nrows = 5)
 
 # Specify delimiter/separator of the file
 pd.read_csv('file.csv', delimiter = '\t')
+
+# Read in only certain columns out of all available columns
+pd.read_csv('file.csv', usecols = ['pop', 'state'])
 ```
 
 ```python
@@ -367,8 +376,12 @@ df.to_csv('file.csv', index = False, header = False)
 - Read/Write for other type of files
 ```python
 # Read Excel XLS or XLSX
-pd.read_excel('file.xlsx', 'Sheet1')
-df.to_excel('file.xlsx', 'Sheet1')
+xlsx = pd.ExcelFile('file.xlsx')
+pd.read_excel(xlsx, 'Sheet1')   # faster than pd.read_excel('file.xlsx', 'Sheet1')
+
+writer = pd.ExcelWriter('file.xlsx')
+df.to_excel(writer, 'Sheet1')     # faster than pd.to_excel('file.xlsx', 
+writer.save()
 
 # Read a JSON string representation
 pd.read_json('file.json')
@@ -388,5 +401,10 @@ pd.read_html('file.html')
 df.groupby('state').size()
 
 # return a Pandas Data Frame
-df.groupby('state').size().reset_index(name = '# of observations')  # give the count colum `# of observations` label
+df.groupby('state').size().reset_index(name = '# of observations')  # give the count column `# of observations` label
+```
+
+- Sum observations (rows) by group
+```python
+df.groupby('department')['sales'].sum().reset_index(name = 'Total Sales')   # give the sum column `Total Sales` label
 ```
