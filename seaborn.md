@@ -49,4 +49,16 @@ sns.factorplot(x='day', y='total_bill', col='smoker', kind='box', data = tips)
 - Title
 ```python
 plt.title("Plot title")
+
+sns.barplot(...).set(title = "Plot title")
+```
+
+- Font size
+```python
+sns.set(font_scale = 2)     # 5 would be crazy big
+```
+
+- Axis label
+```python
+sns.barplot(...).set(xlabel = "X-label", ylabel = "Y-label")
 ```

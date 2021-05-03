@@ -109,6 +109,9 @@ ax1.set(xlim = [0, 100], ylim = [-100, 100])
 # Subplot spacing
 plt.subplots_adjust(left = None, bottom = None, right = None, top = None, wspace = None, hspace = None)
 # wspace and hspace: % of the figure width and figure height to use as spacing between subplots
+
+# Fit subplot(s) into the figure area
+fig.tight_layout()
 ```
 
 ## **VII. Clear**
