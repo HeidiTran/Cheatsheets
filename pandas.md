@@ -148,6 +148,12 @@ df.mean()
 df.median()
 ```
 
+- Iterate
+```python
+for index, row in df.iterrows():
+    print(row['pop'])
+```
+
 - Indexing
 ```python
 # Get the column index of a column
@@ -379,8 +385,14 @@ df.to_csv('file.csv')   # to write to console: to_csv(sys.stdout)
 # Specify the delimiter/separator of the file
 df.to_csv('file.csv', sep = '|')
 
+# Specify how you want null value to be represent
+df.to_csv('file.csv', sep = '|', na_rep = 'NULL')
+
 # Not write header and indexes to file
 df.to_csv('file.csv', index = False, header = False)
+
+# Only write a subset of columns
+data.to_csv('file.csv', index=False, columns=['sate', 'pop'])
 ```
 
 - Read/Write for other type of files
