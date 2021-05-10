@@ -64,8 +64,9 @@ data.duplicated()
 # Get all unique values
 data.unique()
 
-# Filter
+# Filter for if value in a list
 data.isin([1, 6])
+~data.isin([1, 6])  # For not in a list
 
 # Rank
 data = Series([7, -5, 7, 4, 2, 0, 4])
@@ -172,7 +173,7 @@ df.iloc[:10, :]     # Return first 10 rows and all columns
 df.iloc[10 : 20, ['pop', 'state']]  # Return the pop and state column of the 10th - 20th row
 ```
 
-- Slicing
+- Select
 ```python
 # Using label -> inclusive range
 df['year':'state']
@@ -180,6 +181,15 @@ df['year':'state']
 # Using boolean expression
 # NOTE: `|` replaces `or` and `&` replaces `and` 
 df[df['pop'] > 1]
+
+# Using contains
+data = {
+    'title' : ['A', 'B', 'C'],
+    'topics' : ["['a', 'b']", "['c']", "['a', 'c']"]
+}
+df = DataFrame(data)
+df[df.topics.str.contains('a')]
+df[df.topics.str.contains('a|c')]   # | instead of or
 ```
 
 - Add / Delete
@@ -195,10 +205,10 @@ df['new col'] = df['debt']
 del df['debt']  # equivalent to del df.debt
 
 # Drop a col = return a new df without that col. If pass in inplace = True -> will not return a new df
-df.drop('debt', axis='columns') # equivalent to df.drop('debt', axis=1)
+df = df.drop('debt', axis='columns') # equivalent to df.drop('debt', axis=1)
 
 # Drop multiple cols
-df.drop(['year', 'debt'], axis=1)
+df = df.drop(['year', 'debt'], axis=1)
 
 # Add a new row
 newRow = {'state': ['WA'], 'year': 4, 'pop': [1.5]}
@@ -239,7 +249,7 @@ df.index = [20, 21, 22]
 
 # Rename -> without inplace, `rename` will return a new df
 df.rename(index = {'one': 'ONE'}, inplace = True)
-df.rename(columns = {'pop': 'population'}, inplace = True})
+df.rename(columns = {'pop': 'population'}, inplace = True)
 ```
 
 - Sort
@@ -276,8 +286,8 @@ df = df.dropna(thresh = 2)
 df = df.dropna(axis = 1, how = 'all')
 
 # Fill missing value with 0 / Fill different missing value for different column
-df.fillna(0)
-df.fillna({'pop': 1, 'debt': 0}) # Fill column 'pop' with 1
+df = df.fillna(0)
+df = df.fillna({'pop': 1, 'debt': 0}) # Fill column 'pop' with 1
 
 # Check whether a row is a duplicate -> return a boolean Series
 df.duplicated()
@@ -394,7 +404,7 @@ pd.read_hdf
 pd.read_html('file.html')
 ```
 
-## **EDA**
+## **Group by**
 - Count observations (rows) by group
 ```python
 # return a Pandas Series
@@ -407,4 +417,27 @@ df.groupby('state').size().reset_index(name = '# of observations')  # give the c
 - Sum observations (rows) by group
 ```python
 df.groupby('department')['sales'].sum().reset_index(name = 'Total Sales')   # give the sum column `Total Sales` label
+```
+
+- To group by 2 columns
+```python  
+df.groupby(['department', 'product']).mean()
+```
+
+- Group by dictionary/Series
+```python
+people = pd.DataFrame(np.random.randn(5, 5),
+                      columns=['a', 'b', 'c', 'd', 'e'],
+                      index=['Joe', 'Steve', 'Wes', 'Jim', 'Travis'])
+people.iloc[2:3, [1, 2]] = np.nan 
+mapping = {'a': 'red', 'b': 'red', 'c': 'blue',
+           'd': 'blue', 'e': 'red', 'f' : 'orange'}
+
+# Group by dictionary
+by_column = people.groupby(mapping, axis=1)
+by_column.sum()
+
+# Group by Series
+map_series = pd.Series(mapping)
+people.groupby(map_series, axis=1).count()
 ```
