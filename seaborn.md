@@ -29,7 +29,17 @@ tips = sns.load_dataset("tips")
 sns.barplot(x = 'total_bill', y = 'day', data = tips, orient = 'h')
 ```
 
+- Line plot
+```python
+sns.lineplot(x = 'total_bill', y = 'tip', data = tips)
+```
+
 - Scatterplot
+```python
+sns.scatterplot(x = 'total_bill', y = 'tip', data = tips)
+```
+
+- Regression plot
 ```python
 sns.regplot(x = 'total_bill', y = 'tip', data = tips)
 ```
