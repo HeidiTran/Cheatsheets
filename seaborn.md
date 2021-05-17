@@ -51,8 +51,13 @@ sns.displot(tips['total_bill'], bins=100, color='k')
 
 - Facetgrid
 ```python
-sns.factorplot(x='day', y='total_bill', col='smoker', kind='bar', data = tips)
-sns.factorplot(x='day', y='total_bill', col='smoker', kind='box', data = tips)
+# Note: `facetplot` has been renamed to `catplot`
+sns.catplot(x='day', y='total_bill', col='smoker', kind='bar', data = tips)
+sns.catplot(x='day', y='total_bill', col='smoker', kind='box', data = tips)
+
+# To add an overal title to the whole facetgrid figure
+plot.fig.subplots_adjust(top=0.87)  # this is to adjust the space between the title and the plot
+plot.fig.suptitle("Overal title")
 ```
 
 ## **IV. Customize plot**
