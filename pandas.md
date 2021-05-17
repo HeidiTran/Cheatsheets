@@ -49,7 +49,7 @@ data = data.dropna()
 
 # Fill missing value 
 data.fillna(data.mean())    # with mean
-data.fillna(method = 'ffill')   # with `ffill` method
+data.fillna(method = 'ffill', inplace = True)   # with `ffill` method
 
 # Replace
 data.replace([-200, -201], 200) # replace all -200 and -201 with 200
@@ -285,7 +285,7 @@ df = df.dropna()
 # Drop only rows that are all NA
 df = df.dropna(how = 'all')
 
-# Drop rows containing more than 2 # of not NA
+# All rows with # of non-NA >= `thresh` will be kept. Drop others
 df = df.dropna(thresh = 2)
 
 # Drop only cols that are all NA
@@ -429,6 +429,11 @@ df.groupby('state').size().reset_index(name = '# of observations')  # give the c
 - Sum observations (rows) by group
 ```python
 df.groupby('department')['sales'].sum().reset_index(name = 'Total Sales')   # give the sum column `Total Sales` label
+```
+
+- Get percentage by group
+```python
+df.groupby('state').size().groupby(level = 0).apply(lambda x : x * 100 / x.sum()).reset_index(name = 'Percentage')
 ```
 
 - To group by 2 columns
