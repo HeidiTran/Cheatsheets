@@ -59,6 +59,13 @@ data.replace({-200: 200, -201: 201})
 data.duplicated()
 ```
 
+- Convert data type
+
+List of data types: `np.int64` 
+```python
+data = data.astype(np.int64)
+```
+
 - Common functionalities
 ```python
 # Get all unique values
@@ -438,7 +445,10 @@ df.groupby('state').size().groupby(level = 0).apply(lambda x : x * 100 / x.sum()
 
 - To group by 2 columns
 ```python  
-df.groupby(['department', 'product']).mean()
+means = df.groupby(['department', 'product']).mean()
+
+# If we want to unstak the DF above
+means.unstack()
 ```
 
 - Group by dictionary/Series
