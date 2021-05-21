@@ -184,6 +184,7 @@ df.loc([['one', 'three'], ['pop', 'state']])
 # Get range of rows
 df.iloc[:10, :]     # Return first 10 rows and all columns
 df.iloc[10 : 20, ['pop', 'state']]  # Return the pop and state column of the 10th - 20th row
+df[-5:] # Return last 5 rows and all columns
 ```
 
 - Select
@@ -447,6 +448,9 @@ df.groupby('state').size().groupby(level = 0).apply(lambda x : x * 100 / x.sum()
 ```python  
 means = df.groupby(['department', 'product']).mean()
 
+# If you want to hide the group keys in groupby
+df.groupby(['department', 'product'], group_keys = False).mean()
+
 # If we want to unstak the DF above
 means.unstack()
 ```
@@ -467,4 +471,19 @@ by_column.sum()
 # Group by Series
 map_series = pd.Series(mapping)
 people.groupby(map_series, axis=1).count()
+```
+
+## **Pivot table**
+```python
+import seaborn as sns
+tips = sns.load_dataset("tips")
+tips.pivot_table(['tip_pct', 'size'], index=['time', 'day'], 
+                columns='smoker')
+
+# If some combinations are NA -> pass in fill_value
+tips.pivot_table('tip_pct', index=['time', 'size', 'smoker'],
+                 columns='day', aggfunc='mean', fill_value=0)
+
+# Frequency pivot table       
+pd.crosstab([tips.time, tips.day], tips.smoker)          
 ```
