@@ -485,5 +485,7 @@ tips.pivot_table('tip_pct', index=['time', 'size', 'smoker'],
                  columns='day', aggfunc='mean', fill_value=0)
 
 # Frequency pivot table       
-pd.crosstab([tips.time, tips.day], tips.smoker)          
+pd.crosstab([tips.time, tips.day], tips.smoker)   
+# ---------> We can plot the relationship between categorical and continous variable quickly
+pd.crosstab(tips.time, tips.smoker).plot.bar()    
 ```

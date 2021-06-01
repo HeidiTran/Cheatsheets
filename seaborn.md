@@ -92,3 +92,9 @@ sns.set(font_scale = 2)     # 5 would be crazy big
 ```python
 sns.barplot(...).set(xlabel = "X-label", ylabel = "Y-label")
 ```
+
+- Axis limit
+```python
+sns.boxplot(...).set(xlim = [0, 10])
+sns.boxplot(...).set(ylim = [0, 0.4e7])
+```
