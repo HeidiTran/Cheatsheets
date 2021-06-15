@@ -1,6 +1,6 @@
 ## **I. Import**
 ```python
-import dateutil
+import dateutil # pip install python-dateutil
 ```
 
 ## **II. Parse date string**
