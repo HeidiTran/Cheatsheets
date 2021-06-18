@@ -193,6 +193,46 @@ import java.awt.{Color, Font}
 // Alias a class name
 import java.util.{HashMap => JavaHashMap}
 ```
+# High-order functions
+- `collection.map(f)` applies function `f` to every element in the `collection`
+```scala
+// Example 1: Square all elements
+val arr = Array(1, 2, 3)
+arr.map(x => x * x) // can be simplified to
+```
+
+- `collection.filter(f)` uses boolean expression `f` to filter the `collection`
+```scala
+// Example 1: Filter for even numbers
+val arr = Array(12, 5, 16, 20, 9)
+arr.filter(x => x % 2 == 0) // can be simplified to
+arr.filter(_ % 2 == 0)
+
+// Example 2: Filter for strings with length > 5
+val strs = Array("hello", "cup", "apple", "berry", "orange")
+str.filter(_.length > 5)
+```
+
+- `reduceLeft(f)` similar to `foldl` in Racket
+```scala
+// Example 1: Calculate factorial
+def factorial(x: Int) = {
+  (1 to x).reduceLeft(_ * _)
+}
+
+// Example 2: Join a list of strings
+def concat(strings: Seq[String], separator: String) = {
+  strings.reduceLeft(_ + " " + _)
+}
+concat(Array("Mary", "had", "a", "little", "lamb"), " ") // returns "Mary had a little lamb"
+
+// Example 3: Min of a list
+val a = Array(12, 5, 16, 20, 9)
+a.reduceLeft(_ max _) // returns 20
+
+// Example 4: Pass a user-defined function to reduceLeft to find longest string
+strings.reduceLeft((x: String, y: String) => if (x.length > y.length) x else y)
+```
 
 # `groupBy` method
 ```scala
