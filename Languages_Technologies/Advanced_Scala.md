@@ -199,6 +199,9 @@ import java.util.{HashMap => JavaHashMap}
 // Example 1: Square all elements
 val arr = Array(1, 2, 3)
 arr.map(x => x * x) // can be simplified to
+
+// Example 2: Initialize an array contains n number of x
+(1 to n).map(elem => x)
 ```
 
 - `collection.filter(f)` uses boolean expression `f` to filter the `collection`
