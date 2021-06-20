@@ -1,0 +1,183 @@
+# Intro
+> Spark is a fast, **in-memory data processing engine** -> allows data workers to efficiently execute streaming, ML or SQL workloads that require fast iterative access to datasets 
+- Speed: fast since it runs computations in memory
+- Advanced DAG execution that supports acyclic data flow
+- Enables operations in Hadoop to run faster than MapReduce even when running on disk
+
+# Installation 
+https://docs.microsoft.com/en-us/dotnet/spark/tutorials/get-started?tabs=windows (Skip all parts related to .NET)
+
+If on Windows, download `winutils.exe` from https://github.com/cdarlint/winutils
+
+# Spark's components
+- Spark Core: Is the foundation engine
+- Spark SQL: A package built on top of Spark Core designed for working with structured data. Provides an SQL-like interface 
+- Spark Streaming: An extension running on top of Spark. Provide API for manipulating data streams
+- Spark MLlib: A library built on top of Spark for scalable machine learning
+- GraphX: Graph computation engine built on top of Spark for creating and transforming graph
+
+# Architecture: Master and Slave
+!["Spark Architecture"](images/Spark-Architecture.png)
+- One master, Multiple slaves
+- The driver and each of the worker run in their own Java processes
+- Driver's program execution is called a **job**. Driver convert Spark's jobs into tasks
+- Once workers finish their tasks, the result is sent back to the Driver
+- Driver program communicates with Spark through `SparkContext` i.e. the connection to the Spark's cluster
+
+# Creating a Spark app
+- Spark's config
+```scala
+/* Creating Spark app's config
+ * `setMaster` requires a master URL for a distributed cluster or `local` to run locally
+ * local[n] will run locally with n threads
+ * local[*] will run with with as many threads as logical cores 
+ */ 
+val conf = new SparkConf().setAppName("my app").setMaster("local[*]")
+```
+
+- Spark's context: main entrance -> represents a connection to a Spark's cluster
+```scala
+val sc = new SparkContext(conf)
+```
+
+# RDD (Resilient Distributed Datasets)
+> A capsulation around a very large dataset
+- In Spark, all work is expressed as creating new RDDs, transforming existing RDDs, or calling operations on RDDs to compute a result -> Spark automatically distribute the data contianed in RDDs across cluster and parallelize operations performed on the RDD
+- RDD is **distributed** i.e. each RDD is broken into many pieces called *partitions* and are divided across the clusters
+- RDD is **immutale** i.e. can NOT be changed after they're created (to avoid problems related to updates from multiple threads)
+- RDD is **resilient** i.e. deterministic function of their input -> RDD's parts can be recreated at anytime -> In case any node in the cluster goes down, Spark can recover those parts and pickup where it left off
+### What to do with RDD
+- **Transformation**: apply some functions to the data in RDD to create a new RDD
+```scala
+val lines = sc.textFile("fileName.txt")
+val linewWithFriday = lines.filter(line => line.contains("Friday"))
+```
+- **Action**: Compute a result based on an RDD
+```scala
+val lines = sc.textFile("fileName.txt")
+val firstElement = lines.first()
+```
+- Spark workflow: Generate inital RDDs from external data -> Apply transformations -> Launch actions
+
+### Create a RDD
+- Load RDDs from external storage with `SparkContext textFile()`
+```scala
+val sc = new SparkContext(conf)
+val lines = sc.textFile("fileName.txt")
+```
+- Use `SparkContext parallelize()` on existing collection => NOT very practical way if the size of datasets are usually larger than the size of the memory of a single machine
+```scala
+val inputIntegers = List(1, 2, 3, 4)
+
+// Elems in the collection will be copied to form a distributed dataset that can be operated on in parallel
+val integerRdd = sc.parallelize(inputIntegers)
+```
+
+### Transformation
+> **Always** return RDDs
+- `filter()`
+```scala
+val cleanedLines = lines.filter(line => !line.isEmpty)
+```
+- `map()` returns a new RDD by applying a function to all elements of this RDD. The return type of `map()` IS NOT necessary the same as its input type
+```scala
+val urls = sc.textFile("urls.txt")
+urls.map(url => makeHttpRequest(url))
+```
+- `flatmap()` returns a new RDD by first applying a function to all elems of this RDD, and then flatten the results
+```scala
+val lines: RDD[String] = sc.textFile("fileName.txt")
+val words: RDD[String] = lines.flatMap(line => line.split(" ")) 
+// If we use `map` we would get an RDD of array where each array contains words from a line
+```
+- `sample()` returns a sampled subset of an RDD. 
+
+`sample(withReplacement: Boolean, fraction: Double, seed: Long)`
+```scala
+// Sample 10% of the data
+val sampledData = data.sample(withReplacement = true, fraction = 0.1)
+```
+
+- `distinct()` returns a **new** RDD containing the distinct elems in the RDD (Note: A very expensive operation)
+- Some useful set operations: `union()`, `intersection()`, `subtract()`, and `cartesian()` to calculate cartesian product
+### Actions
+> Operations that will compute a final value to the drier program or persist data to an extenral storage system -> **DOES NOT** return RDDs
+- `collect()` retrieves the entire RDD and returns it to the driver program in the form of a regualr collection or value (eg: collect a String RDD -> receive a list of strings)
+```scala
+/* The entire dataset must fit in memory on a single machine when `collect` is called
+ * ---> `collect` should NOT be used on large datasets
+ */
+val inputWords = List("spark", "hadoop", "spark", "hive")
+val wordRdd = sc.parallelize(inputWords)
+val words = wordRdd.collect() // words is a list of string
+```
+- `count()` returns the number of rows in an RDD
+- `countByValue()` looks at unique values in each row of the RDD and return a frequency map of those values
+- `take(n)`  takes n elems from an RDD -> useful for peeking at the RDD
+- `saveAsTextFile()` writes data out to a distributed storage system (HDFS, Amazon S3) or local file system
+- `reduce()` takes a function that operates on **2** elems of the type in the input RDD and return **a** new elem of the same type -> reduces the elements in the RDD using the specified binary function -> Useful for aggregations
+```scala
+val inputInts = List(1, 2, 3, 4)
+val intRdd = sc.parallelize(inputInts)
+val product = intRdd.reduce((x, y) => x*y)
+```
+### Persistence
+- Sometimes, we want to call multiple actions on the same RDD -> call `persist()` on the RDD so that the RDD and its dependencies are not recomputed every time
+- When an RDD is persisted, the first time it's computed in an action, it'll be kept in memory across the nodes
+- There're multiple storage level
+    - `MEMORY_ONLY` (default option + equiv to `RDD.cache()`) Store as Java objs in the JVM. If too big, won't cached
+    - `MEMORY_AND_DISK`: Similar to `MEMORY_ONLY` but if too big, store in disk too
+    - `MEMORY_ONLY_SER`: Store as serialized Java objs (more space efficient but more CPU-intensive to read) If too big, won't cached
+    - `MEMORY_AND_DISK_SER`: Similar to `MEMORY_ONLY_SER` but if too big, store in disk too
+    - `DISK_ONLY`: Store only on disk
+
+Option `MEMORY_ONLY_SER` and `MEMORY_AND_DISK_SER` are only available to Java and Scala
+```scala
+val inputInts = List(1, 2, 3, 4)
+val intRdd = sc.parallelize(inputInts)
+intRdd.persist(StorageLevel.MEMORY_ONLY)
+val product = intRdd.reduce((x, y) => x*y) // 1st action
+val cnt = intRdd.count() // 2nd action
+```
+- Choosing storage level
+    - If the RDD can fit with the default storage level, pick `MEMORY_ONLY` -> most CPU-efficient + allow fast operations on the RDDs
+    - If not, pick `MEMORY_ONLY_SER` -> more space-efficient + operations reasonably fast
+    - Don't save to disk unless the operations on the datasets are expensive or they filter a significant amount of the data
+
+# Pair RDD
+> A type of RDD that can store key-value pairs
+
+### Create Pair RDD
+- From a list of tuples using `SparkContext parallelize()`
+```scala
+val tuples = List(("a", 1), ("b", 2), ("c", 3))
+val pairRDD = sc.parallelize(tuples)
+
+pairRdd.coalesce(1).saveAsTextFile("out.txt") // pretty print to file
+```
+
+- From a regular RDD using `map()`
+```scala
+val strs = List("Lily 23", "Jack 29", "Mary 20")
+val regRDDs = sc.parallelize(strs)
+val pairRDD = regRDDs.map(s => (s.split(" ")(0), s.split(" ")(1)))
+```
+
+### Transformation
+> All transformation available to regular RDDs are available to pair RDDs
+- `filter()`
+```scala
+val strs = List("Lily 23", "Jack 29", "Mary 20")
+val regRDDs = sc.parallelize(strs)
+val pairRDD = regRDDs.map(s => (s.split(" ")(0), s.split(" ")(1)))
+val cleaned = pairRDD.filter(pair => pair._2 > 23)
+```
+- `mapValues()` is similar to `map()` but only apply the specified function on the values
+- `reduceByKey()` runs several parallels `reduce()` operations, one for each key where each operation combines values that have the same key
+```scala
+// Calculate word frequency where wordRddd is a RDD[String] of words
+val wordPairRdd = wordRdd.map(word => (word, 1))
+val wordCounts = wordPairRdd.reduceByKey((x, y) => x + y)
+for ((word, count) <- wordCounts.collect()) println(word + " : " + count)
+```
+- `groupByKey()`
