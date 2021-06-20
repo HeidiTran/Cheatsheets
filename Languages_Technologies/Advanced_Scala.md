@@ -251,3 +251,12 @@ words.groupBy(_.length) // group by words' length
 val arr = ArrayBuffer(1, -3, -4, 2, 5, 10, -6)
 val (negative, positive) = arr.partition(_ < 0) // partition returns a tuple
 ```
+
+# Scala Project Folder Structure
+```scala
+// All source files is under `scala` folder 
+
+└── src
+    └── main
+        └── scala
+```
