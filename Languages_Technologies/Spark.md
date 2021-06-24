@@ -40,6 +40,13 @@ val conf = new SparkConf().setAppName("my app").setMaster("local[*]")
 val sc = new SparkContext(conf)
 ```
 
+# Running Spark app on a cluster
+- User submits an app using `spark-submit`
+- `spark-submit` launches the driver program and invokes the `main` method specified by the user
+- The driver program contacts the cluster manager (eg: `Hadoop Yarn`) to ask for resources to start executors
+- Cluster manager launches executors on behalf of the driver program
+- The driver process runs through the user application. Based on the RDD or dataset operations in the program, the driver sends work to executors in the form of tasks
+
 # RDD (Resilient Distributed Datasets)
 > A capsulation around a very large dataset
 - In Spark, all work is expressed as creating new RDDs, transforming existing RDDs, or calling operations on RDDs to compute a result -> Spark automatically distribute the data contianed in RDDs across cluster and parallelize operations performed on the RDD
