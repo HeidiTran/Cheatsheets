@@ -28,6 +28,13 @@ conda env remove -n your-env-name
 # -n, --name: name of the environment
 ```
 
+- Rename an environment
+```bash
+# First, deactive the <old name i.e. the current environment> with `deactivate`
+conda create --name <new name> --clone <old name>
+conda remove --name <old name> --all
+```
+
 - Export an environment
 ```bash
 conda env export > environment.yml
