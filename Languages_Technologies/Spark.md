@@ -188,3 +188,72 @@ val wordCounts = wordPairRdd.reduceByKey((x, y) => x + y)
 for ((word, count) <- wordCounts.collect()) println(word + " : " + count)
 ```
 - `groupByKey()`
+
+# Dataset
+> A **strongly typed** collection of domain-specific objs that can be transformed in parallel using functional or relational operations
+- DataSet is an extension of DataFrame. **DataFrame** is an untyped view and conceptually equal to a table in a relational DB + allow Spark to manage schema
+- DataSet represents data in the form of JVM objs of row or a collection of row oject
+- Why Dataset?
+    - Rich semantics, high-level abstractions and domain specific APIs are needed
+    - Processing requires aggregation, averages, sum, SQL queries, and columnar access on semi-structured data
+    - Unification and simplification of APIs across Spark Libraries
+
+===> Prefer Dataset over RDD    
+
+### Row Object
+- Row obj represent records inside dataset and are simple **fixed-length arrays of fields**
+- Have getters to get value of each field given its index
+```scala
+val field7 = row.get(7) // type Any
+val field1 = row.getLong(1) // type Long
+val field2 = row.getBoolean(2) // type Boolean
+```
+
+### Encoders
+> Translate between JVM's Java objs and Spark's internal binary formal
+- Spark has built-in encoders such as integer encoder or long encoder 
+
+### DataFrame to DataSet
+```scala
+// Create a dataset of type "UserDefinedType"
+val dataset = aDataFrame.as[UserDefinedType]
+```
+
+### RDD to DataSet
+```scala
+import session.implicits._
+val dataSet = rdd.toDS()
+
+// DataSet to RDD
+dataSet.rdd
+```
+
+#### Useful APIs
+```scala
+// Print out schema
+dataset.printSchema
+
+// Print the count
+dataset.count
+
+// Print the first n rows
+dataset.show(n)
+
+// Filter
+dataset.filter(row => row.fieldName == ...).show()
+
+// Groupby
+dataset.groupBy(dataset.col("columnName")).show()
+
+// Order by 
+dataset.orderBy(dataset.col("columnName").desc).show()
+
+// Map
+dataset.map(row => row.fieldname ... )
+```
+
+# Schema conversion magic
+- Import
+```scala
+import session.implicits._
+```
