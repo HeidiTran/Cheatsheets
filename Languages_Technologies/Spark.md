@@ -189,9 +189,51 @@ for ((word, count) <- wordCounts.collect()) println(word + " : " + count)
 ```
 - `groupByKey()`
 
+# Spark Session
+> Provides a single point of entry to interact with underlying Spark functionality and allows programming Spark with DataFrame and DataSet APIs
+- All functionalities available through `SparkContext`, `SQLContext` and `HiveContext` are available through `SparkSession`
+
+- Create 
+```scala
+import org.apache.spark.sql.SparkSession
+val spark = SparkSession
+    .builder()
+    .appName("My app")
+    .config("spark.some.config.option", "some value")
+    .getOrCreate()
+```
+
+# Schema conversion magic
+> i.e. in order to use method like `toDS()` and `toDF()`
+- Import
+```scala
+import session.implicits._
+```
+
+# DataFrame
+> Immutable distributed collection of data 
+- Is lazily evaluates like RDD transformations
+- Unlike RDD, data is organized into named columns like a tale in a relational DB (but with richer optimization)
+- Allow higher-level abstraction on collection of data
+- Can be built from different data sources such as structured data file, HIVE tables, external DB or existing RDDs
+
+Example creating a dummy DataFrame
+```scala
+import session.implicits._
+
+val payment = sc.parallelize(Seq((1, 101, 2500), (2, 102, 1110))).toDF("paymentId", "customerId", "amount")
+payment.show()
+```
+
+Example creating from a JSON file
+```scala
+val df = spark.read.json("example.json")
+df.show()
+```
+
 # Dataset
 > A **strongly typed** collection of domain-specific objs that can be transformed in parallel using functional or relational operations
-- DataSet is an extension of DataFrame. **DataFrame** is an untyped view and conceptually equal to a table in a relational DB + allow Spark to manage schema
+- DataSet is an extension of a DataFrame. 
 - DataSet represents data in the form of JVM objs of row or a collection of row oject
 - Why Dataset?
     - Rich semantics, high-level abstractions and domain specific APIs are needed
@@ -211,6 +253,8 @@ val field2 = row.getBoolean(2) // type Boolean
 
 ### Encoders
 > Translate between JVM's Java objs and Spark's internal binary formal
+- Is primary concept in serialization and deserialization framework in Spark SQL
+- Provides on-demand access to individual attributes without having to de-serialize an entire obj
 - Spark has built-in encoders such as integer encoder or long encoder 
 
 ### DataFrame to DataSet
@@ -252,8 +296,41 @@ dataset.orderBy(dataset.col("columnName").desc).show()
 dataset.map(row => row.fieldname ... )
 ```
 
-# Schema conversion magic
-- Import
+# Join
 ```scala
 import session.implicits._
+
+val payment = sc.parallelize(Seq((1, 101, 2500), (2, 102, 1110))).toDF("paymentId", "customerId", "amount")
+payment.show()
+
+val customer = sc.parallelize(Seq((101, "Jon"), (102, "Aron"), (103, "Sam"))).toDF("customerId", "name")
+customer.show()
+
+// Inner join
+val innerJoinDf = customer.join(payment, "customerId")
+val innerJoinDf1 = customer.join(payment,  Seq("customerId"), "inner")
+
+// Left join
+val leftJoinDf = customer.join(payment,  Seq("customerId"), "left")
+
+// Right join
+val rightJoinDf = customer.join(payment,  Seq("customerId"), "right")
 ```
+
+# .CSV files
+```scala
+// Read
+sparkSession.read
+    .format("csv")
+    .option("header", "true")
+    .option("delimiter", ",")
+    .load("fileName.csv")
+
+// Write
+myDataset.write
+    .format("csv")
+    .option("delimiter", ",")
+    .mode(SaveMode.Overwrite)
+    .save("output.csv")    
+```
+
