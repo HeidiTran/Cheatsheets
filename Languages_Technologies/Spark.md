@@ -374,4 +374,18 @@ myDataset.write
     .mode(SaveMode.Overwrite)
     .save("output.csv")    
 ```
+# Parquet files
+> Default data source in Spark
+```scala
+// Read
+var file = "abc.snappy.parquet"
+val df = sparkSession.read
+    .format("parquet")
+    .load(file)
 
+// Write
+df.write.format("parquet")    
+    .mode("overwrite")
+    .option("compression", "snappy")
+    .save("path/to/destination")
+```
