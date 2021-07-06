@@ -231,6 +231,25 @@ val df = spark.read.json("example.json")
 df.show()
 ```
 
+#### Useful APIs
+import session.implicits._
+
+```scala
+// Show
+df.show()
+
+// Select columns
+df.select($"columnName")
+df.select($"col1", $"col2")
+df.select($"col1" as "COL 1", $"col2")
+
+// Filter
+df.filter($"columnName" > 200)
+
+// GroupBy
+df.groupBy($"columnName").mean()
+```
+
 # Dataset
 > A **strongly typed** collection of domain-specific objs that can be transformed in parallel using functional or relational operations
 - DataSet is an extension of a DataFrame. 
@@ -287,10 +306,12 @@ dataset.show(n)
 dataset.filter(row => row.fieldName == ...).show()
 
 // Groupby
-dataset.groupBy(dataset.col("columnName")).show()
+dataset.groupBy($"columnName").show()
 
 // Order by 
 dataset.orderBy(dataset.col("columnName").desc).show()
+dataset.orderBy(desc($"columnName")).show()
+
 
 // Map
 dataset.map(row => row.fieldname ... )
@@ -315,6 +336,26 @@ val leftJoinDf = customer.join(payment,  Seq("customerId"), "left")
 
 // Right join
 val rightJoinDf = customer.join(payment,  Seq("customerId"), "right")
+```
+
+# User-defined functions (UDFs)
+- After you define UDFs and register them, you can use them in DataFram/Dataset APIs
+```scala
+import org.apache.spark.sql.functions.{udf}
+
+// Define
+val squared = (s: Long) => {
+    s * s
+}
+
+/* Register with udf 
+ * The first param in `[]` is the return type of the function
+ * Subsequent params in `[]` are the params' types of the function
+ */
+val square = udf[Long, Long](squared)
+
+// Call
+payment.select(square($"amount") as "squaredAmount").show()
 ```
 
 # .CSV files
