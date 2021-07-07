@@ -3,6 +3,55 @@
 pip install -U sckikit-learn
 ```
 
+# Split 
+> Split dataset into train set and test set
+```python
+from sklearn.model_selection import train_test_split
+
+'''
+@test_size: proportion of the test split (default is 0.25)
+@random_state: controls the shuffling applied to the data before the split -> same val produce the same split
+'''
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+```
+
+# Evaluate
+- Confusion Matrix
+    - True positive (tp): “This is iris-setosa, we predicted as iris-setosa”
+    - False positive (fp) (Type 1 Error): “this is not iris-setosa, we predicted as iris-setosa”
+    - False negative (fn) (Type 2 Error): “this is iris-setosa, we predicted as not iris-setosa”
+    - True negative (tn): “this is not iris-setosa, we predicted as not iris-setosa”
+
+|      |positive | negative |
+|------|------|------|
+|positive|tp |fp|
+|negative|fn | tn|
+
+![](./images/Model_Eval.png)
+
+```python
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+
+# Summary of the predictions made by the classifier
+print(classification_report(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
+
+# Accuracy score
+from sklearn.metrics import accuracy_score
+print(f'Accuracy is: {accuracy_score(y_pred,y_test)}')
+```
+
+# Rescale
+- Scale with `StandardScaler`
+```python
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+scaler.fit(df)
+scaled = scaler.transform(df)
+```
+
 # Logistic Regression
 - Useful to run early in the workflow
 - Measures the relationship between the **categorical** dependent variable (feature) on 1 or more independent variables (features) by estimating probabilities using a logistic function which is the cumulative logistic distribution
