@@ -413,7 +413,7 @@ writer = pd.ExcelWriter('file.xlsx')
 df.to_excel(writer, 'Sheet1')     # faster than pd.to_excel('file.xlsx', 
 writer.save()
 
-# Read a JSON string representation
+# Read/Write a JSON string representation
 pd.read_json('file.json')
 df.to_json()
 
@@ -422,6 +422,10 @@ pd.read_hdf
 
 # Read HTML (only read in <table> tag)
 pd.read_html('file.html')
+
+# Read/Write Parquet files
+pd.read_parquet('file.parquet') # required: pip install pyarrow
+pd.to_parquet('file.parquet', compression = 'snappy')
 ```
 
 ## **Group by**
