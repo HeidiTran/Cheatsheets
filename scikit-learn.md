@@ -61,7 +61,6 @@ from sklearn.linear_model import LogisticRegression
 logreg = LogisticRegression()
 logreg.fit(X_train, Y_train)
 Y_pred = logreg.predict(X_test)
-modelAccuracy = round(logreg.score(X_train, Y_train) * 100, 2)
 
 # Calculate feature's correlation to the dependent variable
 # coeff_df is the `df` WITHOUT the dependent variable
@@ -78,7 +77,6 @@ from sklearn.svm import SVC
 
 svc.fit(X_train, Y_train)
 Y_pred = svc.predict(X_test)
-modelAccuracy = round(svc.score(X_train, Y_train) * 100, 2)
 ```
 ```python
 from sklearn.svm import LinearSVC
@@ -98,7 +96,6 @@ from sklearn.neighbors import KNeighborsClassifier
 knn = KNeighborsClassifier(n_neighbors = 3)
 knn.fit(X_train, Y_train)
 Y_pred = knn.predict(X_test)
-modelAccuracy = round(knn.score(X_train, Y_train) * 100, 2)
 ```
 
 # Naive Bayes
@@ -109,7 +106,6 @@ from sklearn.naive_bayes import GaussianNB
 gaussian = GaussianNB()
 gaussian.fit(X_train, Y_train)
 Y_pred = gaussian.predict(X_test)
-modelAccuracy = round(gaussian.score(X_train, Y_train) * 100, 2)
 ```
 
 # Perceptron
@@ -120,7 +116,6 @@ from sklearn.linear_model import Perceptron
 perceptron = Perceptron()
 perceptron.fit(X_train, Y_train)
 Y_pred = perceptron.predict(X_test)
-modelAccuracy = round(perceptron.score(X_train, Y_train) * 100, 2)
 ```
 
 # Stochastic Gradient Descent
@@ -130,7 +125,6 @@ from sklearn.linear_model import SGDClassifier
 sgd = SGDClassifier()
 sgd.fit(X_train, Y_train)
 Y_pred = sgd.predict(X_test)
-modelAccuracy = round(sgd.score(X_train, Y_train) * 100, 2)
 ```
 
 # Decision Tree
@@ -143,7 +137,6 @@ from sklearn.tree import DecisionTreeClassifier
 decision_tree = DecisionTreeClassifier()
 decision_tree.fit(X_train, Y_train)
 Y_pred = decision_tree.predict(X_test)
-modelAccuracy = round(decision_tree.score(X_train, Y_train) * 100, 2)
 ```
 
 # Random Forest aka Random Decision Forests
@@ -156,6 +149,4 @@ random_forest = RandomForestClassifier(n_estimators=100)
 random_forest.fit(X_train, Y_train)
 Y_pred = random_forest.predict(X_test)
 random_forest.score(X_train, Y_train)
-modelAccuracy = round(decision_tree.score(X_train, Y_train) * 100, 2)
- = round(random_forest.score(X_train, Y_train) * 100, 2)
 ```
