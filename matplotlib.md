@@ -60,7 +60,14 @@ ax1.hist(np.random.randn(100), bins = 20, color = 'k', alpha = 0.3)
 
 ## **V. Scatter plot**
 ```python
-ax2.scatter(data1, data2)
+ax2.scatter(data1, data2, color = 'r', marker = 'o')
+'''
+marker: 
+    o : circle
+    s : square
+    ^ : triangle
+    D : diamond
+'''
 
 # eg: 
 ax2.scatter(np.arange(30), np.arange(30) + 3*np.random.randn(30))

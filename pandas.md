@@ -436,6 +436,9 @@ df.groupby('state').size()
 
 # return a Pandas Data Frame
 df.groupby('state').size().reset_index(name = '# of observations')  # give the count column `# of observations` label
+
+# Convert to percentage
+df['# of observations'].apply(lambda x : x*100/df['# of observations'].sum())
 ```
 
 - Sum observations (rows) by group
