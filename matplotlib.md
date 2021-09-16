@@ -108,7 +108,7 @@ yAxixFormatter = FuncFormatter(lambda x, pos : int(x))  # `x` is the value, `pos
 ax1.yaxis.set_major_formatter(yAxixFormatter)
 
 # Subplot title
-ax1.set_title("My plot title")
+ax1.set_title("My plot title", y = 0.2) # y default is 0.98
 
 # Axis's limits
 ax1.set(xlim = [0, 100], ylim = [-100, 100])

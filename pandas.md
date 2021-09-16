@@ -212,6 +212,10 @@ df[df.topics.str.contains('a|c')]   # | instead of or
 # index parameter is REQUIRED for correct rows mapping
 df['debt'] = pd.Series([1, 2, 3], index=['one', 'two', 'three'])
 
+# Add a new col using a list values
+df.insert(columnPosition, "columnName", [values], inplace)
+# eg: df.insert(0, "NewColumn", ["apple", "orange"], True) -> insert a column as the first col in the dataframe
+
 # Clone a col to a new col
 df['new col'] = df['debt']
 
