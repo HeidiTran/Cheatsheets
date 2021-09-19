@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 
 '''
 @test_size: proportion of the test split (default is 0.25)
-@random_state: controls the shuffling applied to the data before the split -> same val produce the same split
+@random_state: controls the shuffling applied to the data before the split -> Setting the random state will give the same split every time the same value is entered. It will look random, but the algo used is deterministic and the output will be consistent. To get truly random results that change every time you run, set random_state to None
 '''
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
 ```
@@ -43,13 +43,36 @@ print(f'Accuracy is: {accuracy_score(y_pred,y_test)}')
 ```
 
 # Rescale
+- Scale with `MinMaxScaler`
+
+`MinMaxScaler` takes each feature and scales it to the range 0 - 1. It replaces the min value with *0*, the max with *1* and the other vlaues somewhere in between based on a linear mapping.
+```python
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+scaled = scaler.fit_transform(df)
+```
+
 - Scale with `StandardScaler`
+
+`StandardScaler` forces each feature to have a 0 mean and a variance of 1 &rightarrow; commonly used starting point for normalization
 ```python
 from sklearn.preprocessing import StandardScaler
-
 scaler = StandardScaler()
-scaler.fit(df)
-scaled = scaler.transform(df)
+scaled = scaler.fit_transform(df)
+```
+
+- Scale with `Normalizer`
+
+`Normalizer` ensures the sume of the values for each sample equals to 1
+```python
+from sklearn.preprocessing import Normalizer
+```
+
+- Scale with `Binarizer`
+
+`Binarizer` turn numerical features into binary features, where any value above a threshold is 1 and any below is 0
+```python
+from sklearn.preprocessing import Binarizer
 ```
 
 # Logistic Regression
@@ -149,4 +172,19 @@ random_forest = RandomForestClassifier(n_estimators=100)
 random_forest.fit(X_train, Y_train)
 Y_pred = random_forest.predict(X_test)
 random_forest.score(X_train, Y_train)
+```
+
+# Pipeline
+- Pipelines store the steps in your data mining workflow. They can take your raw data in, perform all the necessary transformations, and then create a prediction.
+```python
+from sklearn.pipeline import Pipeline
+
+# Take a list of steps as input 
+# All steps are Transformers while the last step needs to be an Estimator
+# The input dataset is altered by each Transformer with the output of 1 step being the input of the next step
+scaling_pipeline = Pipeline([('scale', MinMaxScaler()),
+                             ('predict', KNeighborsClassifier())])
+
+# pipelines has type `estimator` so we can use them in functions such as `cross_val_score`
+scores = cross_val_score(scaling_pipeline, X, y, scoring='accuracy')                             
 ```

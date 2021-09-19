@@ -53,6 +53,10 @@ Note: good for **taxonomy formation** aka the organization of observations into 
 ### 5. Outlier analysis i.e. Anomaly mining
 eg: uncover fraudulent usage of credit cards by detecting unusually large amounts purchases
 
+---
+# Feature-based normalization 
+---
+
 # Affinity analysis
 > Type of data mining that gives similarity between samples. This falls under *Mining of frequent patterns, associations, and regression*
 
@@ -77,6 +81,18 @@ eg:
 - Cons
   - Computationally expensive to compute the distance between all pairs of samples even though some complex methods exist to improve this speed
   - Can do poorly in **categorical-based datsets** with categorical features. The issue is due to the difficulty in comparing differences in categorical values, sth better left to an algo that gives weight to each feature's importance. (Note: comparing categorical features can be done with some distance metrics or pre-processing steps such as one hot encoding)
+- Distance metrics
+  - To answer question: Are these two samples more similar than the other two?
+  - Common distance: Euclidean, Manhattan, Cosin
+    - Euclidean distance: real-world distance between 2 objs
+      - Pros: Intuitive
+      - Cons: Poor accuracy if some features have larger values than a value of 0 (known as sparse matrix). When dataset have many features, the distance between random samples converges due to the *curse of dimensionality* -> hard to compare samples as the distances are always nearly the same.
+    - Manhattan distance
+      - Pros: Poor accuracy in case of sparse matrix but not as bad as Euclidean distance. Not too bad when dataset have many features.
+      - Cons: If some features have very large values, it can *overrule* the similarity in other features (eg: if feature A has values between 1 and 2, and feature B has values between 1K - 2K &rightarrow; feature A unlikely have any impact on the result) &rightarrow; can address this problem with normalization
+    - Cosine distance
+      - Pros: Good for comparing items with many features such as text mining
+      - Cons: Discards some info about the length of the vector (which is useful in some cases)
 
 
 # Some keywords
@@ -86,3 +102,22 @@ eg:
 Estimators must have the 2 functions
 - `fit()`: This function performs the training of the algo - setting the values of internal parameters. `fit()` takes 2 inputs, the training sample dataset and the corresponding classes for those samples.
 - `predict()`: Give the class of the testing samples when we provide only the input. 
+
+### Cross-fold validation
+Problem: What if our models perform poor/well due to an unlucky/lucky split of the data
+> Def: A framework to address the problem of choosing a single testing set. This is a standard *best-practice* in data mining.
+
+The process works by doing many experiments with different training and testing splits, but using each sample in a testing set only once (to reduce the likelihood of choosing lucky testing sets).
+- Step 1: Split the entire dataset into several sections called folds
+- Step 2: For each fold
+  - Set the fold aside as the current testing set
+  - Train the algo on the remaining folds
+  - Evaluate on the current testing set
+- Step 3: Report on all the evaluation scores, including the average score
+
+It's natural for variation in results when performing data mining due to variation in how the folds are created and randomness inherent in some classification algos.
+
+It's a good idea to rerun experiments multiple times to get a sense of the average result and the spread of the results (the mean and stadard deviation) across all experiments.
+
+### Pipeline
+> Def: Pipelines store the steps in your data mining workflow. They can take your raw data in, perform all the necessary transformations, and then create a prediction. 
