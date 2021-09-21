@@ -144,6 +144,7 @@ df.values           # Get all the data by rows
 df.info()           # Describe indexes
 df.head()           # Get the first 5 rows. To get `n` rows: df.head(n)
 df.tail()           # Get the last 5 rows
+df.dtypes           # Get the data types of all columns
 df.count()          # Number of non-NA values
 df.describe()       # Summary statistics
 
@@ -159,6 +160,13 @@ df.median()
 ```python
 for index, row in df.iterrows():
     print(row['pop'])
+
+# If we want to sort, then loop
+for index, row in df.sort("ColumnName").iterrows():
+    print(row['aColumn'])
+
+# Set value for a specific cell
+df.at[index, "ColumnName"] = value
 ```
 
 - Indexing
@@ -376,6 +384,9 @@ pd.read_csv('file.csv', names = ['pop', 'state', 'debt'])
 
 # If want to use column 0 as index -> index_col = 1
 pd.read_csv('file.csv', header = None, index_col = 1)
+
+# Parse date columns as Date object
+pd.read_csv('file.csv', parse_date = ["DateCol1", "DateCol2"])
 
 # Skip rows -> pass in row indexes
 pd.read_csv('file.csv', skiprows = [0, 2, 3])
