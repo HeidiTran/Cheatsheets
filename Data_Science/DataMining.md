@@ -4,7 +4,7 @@
 ## Steps
 1. **Data cleaning**: to remove noise and inconsistent data
 2. **Data integration**: where multiple data sources may be combined
-3. **Data selection**: data relevant to the analysis task are retrieved from the database
+3. **Data selection**: data relevant to the analysis task are retrieved from the database (Feature engineering) &rightarrow; choosing good features is key to getting good outcomes
 4. **Data transformation**: data are transformed and consolidated into forms appropriate for mining by performing summary or aggregation operations
 5. **Data mining**: intelligent methods are applied to extract data patterns
 6. **Pattern evaluation**: identify truly interesting patterns representing knowledge based on *interesting measures*
@@ -94,6 +94,36 @@ eg:
       - Pros: Good for comparing items with many features such as text mining
       - Cons: Discards some info about the length of the vector (which is useful in some cases)
 
+### 2. Decision Trees
+- Advantages: Readable by humans, work with a variety of features (including categorical)
+> FYI: There are many algo for creating decision trees. Many of these algos are iterative. They start at the base node and decide the best feature to use for the first decision, then go to each node and choose the next best feature, and so on. This process is stopped at a certain point when it's decided that nothing more can be gained from extending the tree further. The `scikit-lear` package implements the **Classification and Regression Trees (CART)** algo as its default Decision tree class which can use both categorical and continuous features.
+
+- Stopping criterion
+> Def: When the tree building is nearly completed, the final few decisions can often be somewhate arbitrary and rely on only a small # of smaples to make their decision. Using such nodes can result in trees that *overfit* the training data. Instead, a stopping criterion can be used to ensure that the Decision Tree does not reach this point.
+> 
+> In `scikit-learn` we have 2 options 
+> - **min_samples_split**: specifies how many samples are needed in order to create a new node in the Decision Tree &rightarrow; whether a decision node will be created
+> - **min_samples_leaf**: specifies how many samples must be resulting from a node for it to stay &rightarrow; whether a decision node will be kept
+
+- Pruning
+> Def: Instead of a stopping criterion, the tree could be created in full and then trimmed. The trimming process (pruning) removes nodes that do not provide much info to the overall process
+
+- Criterion for creating a decision: decide which rule and value to use to split a node into subnodes
+  - Gini impurity: measure of how often a decision node would incorrectly predict a sample's class
+  - Information gain: this uses information-theory-based entropy to indicate how musch extra info is gained by the decision node
+> In `scikit-learn`, `criterion {"gini", "entropy"}, default="gini"`
+
+### 3. Random Forests
+A single Decision Tree can learn quite complex functions. However, decision trees are prone to overfitting &rightarrow; create many decision trees and ask each to predict the class value, and then take a majority vote and use that answer as the overall prediction.
+
+Decisions trees is an algo with a high variance &rightarrow; random forests averaging a large # of decision trees which greatly reduced this variance
+
+- Cons: Increase in time
+
+How to build a random forest
+- Since we only have 1 training dataset, which means our input and output will be the same if we try to build multiple trees &rightarrow; choose a random subsample of the dataset to create new training sets (*This processing is called **bagging***)
+- When creating many decision trees from similar data, the features that are used for the first few decision nodes in the trees tend to be similar &rightarrow; choose a random subset of the features to perform our data splits on
+> Def: Random forests are randomly built trees using randomly chosen samples using randomly chosen features.
 
 # Some keywords
 ### 1. Estimators
@@ -103,7 +133,7 @@ Estimators must have the 2 functions
 - `fit()`: This function performs the training of the algo - setting the values of internal parameters. `fit()` takes 2 inputs, the training sample dataset and the corresponding classes for those samples.
 - `predict()`: Give the class of the testing samples when we provide only the input. 
 
-### Cross-fold validation
+### 2. Cross-fold validation
 Problem: What if our models perform poor/well due to an unlucky/lucky split of the data
 > Def: A framework to address the problem of choosing a single testing set. This is a standard *best-practice* in data mining.
 
@@ -119,5 +149,17 @@ It's natural for variation in results when performing data mining due to variati
 
 It's a good idea to rerun experiments multiple times to get a sense of the average result and the spread of the results (the mean and stadard deviation) across all experiments.
 
-### Pipeline
+### 3. Pipeline
 > Def: Pipelines store the steps in your data mining workflow. They can take your raw data in, perform all the necessary transformations, and then create a prediction. 
+
+### 4. Variance
+> Def: Error introduced by variations in the training dataset on the algorithm.
+
+Algos with a high variance (such as decision trees) can be greatly affected by variations to the training dataset. &rightarrow; models have the problem of overfitting
+
+Eg: A classifier that always predicts randomly would have a very high variance
+
+### 5. Bias
+> Def: Error introduced by assumptions in the algo rather than anything to do with the dataset. Eg: if we has an algo that presumed that all features would be normally distributed, then the algo may have a higher error if the features were not.
+
+Eg: A classifier that always predicts true regardless of input has a very high bias.
