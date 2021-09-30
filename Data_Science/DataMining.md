@@ -65,6 +65,29 @@ eg:
 - **Items** to sell to the users to provide recommended movies or products
 - **Human genes** to find people that share the same ancestors
 
+### Apriori algo
+> Def: A classic algo for affinity analysis 
+
+Intuition behind the algo
+- Ensure that a rule has sufficient support within the dataset by defining a minimum support level
+  - eg: Itemset (A, B) have to have a support of at least 30 &rightarrow; A and B must occur at least 30 times 
+  - eg: For an itemset(A, B, C, D) to be considered frequent, the set (A, B, C) must also be frequent 
+
+> **Frequent itemset** is a set of items with a minimum support
+
+High-level Overview
+- Use the Apriori algo to generate frequent itemsets
+  - We have to set the minimum support value here. If the value is too low will cause Apriori to test a larger # of itemsets &rightarrow; take a lot of time. If the value is too high &rightarrow; fewer itemsets being considered frequent
+- Create association rules (eg: if a person recommended movie X, they would also recommend movie Y) by testing combinations of premises and conclusions within the frequent itemsets based on their confidence
+  - We have to choose a minimum confidence level if we want to restrict the # of rules return. If this value is too low, the returned rules will have a high support but are not very accurate. If this value is high, the returned rules will be more accurate but with fewer rules being discovered overall
+
+Workflow Outline
+- Create initial frequent itemsets by placing each item in its own itemset i.e. frequent itemsets of length 1. Only items with at least the minimum support are used in this step
+- New candidate itemsets are created from the most recently discovered frequent itemsets by finding supersets (k + 1) of the existing frequent itemsets
+- All candidate itemsets are tested to see if they are frequent. If a candidate is not frequent then it's discarded. If there are no new frequent itemsets from this step, go to the last step
+- Store the newly discovered freqent itemsets and go to the second step
+- Return all of the discovered frequent itemsets
+
 # Classification
 > We have a single variable that we're interested in that we call the **class** + we have a set of samples that represent objects we're interested in classifying.
 

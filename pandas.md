@@ -373,14 +373,12 @@ df.plot(kind = 'scatter', x = 'points', y = 'price', linestyle = '--')
 ## **Files**
 - Read and Write to CSV
 ```python
-# Read a file without header
-pd.read_csv('file.csv', header = None, index_col = None)
+# Read a file without header i.e the first line of the file is data
+# To give column names use `names`
+pd.read_csv('file.csv', header = None, index_col = None, names = ['pop', 'state', 'debt'])
 
 # If the first row of the file is header -> header = 0
 pd.read_csv('file.csv', header = 0)
-
-# If want to use your own headers
-pd.read_csv('file.csv', names = ['pop', 'state', 'debt'])
 
 # If want to use column 0 as index -> index_col = 1
 pd.read_csv('file.csv', header = None, index_col = 1)
@@ -495,6 +493,11 @@ map_series = pd.Series(mapping)
 people.groupby(map_series, axis=1).count()
 ```
 
+- Turn `group_by` result into a dictionary
+```python
+dict((k, v.values) for k, v in df.groupby("keyColumn")["ValueColumn"])
+```
+
 ## **Pivot table**
 ```python
 import seaborn as sns
@@ -510,4 +513,11 @@ tips.pivot_table('tip_pct', index=['time', 'size', 'smoker'],
 pd.crosstab([tips.time, tips.day], tips.smoker)   
 # ---------> We can plot the relationship between categorical and continous variable quickly
 pd.crosstab(tips.time, tips.smoker).plot.bar()    
+```
+
+# Parse time since epoch to DateTime
+```python
+# @param unit: the type of unit the column is in
+# @return the DateTime representation of the column based on time since Unix epoch
+df["Datetime"] = pd.to_datetime(df['Datetime'], unit='s')
 ```
