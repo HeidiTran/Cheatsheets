@@ -140,10 +140,26 @@ Y_pred = knn.predict(X_test)
 - A family of simple probabilistic classifiers based on applying Bayes' theorem with strong independence assumptions between the features
 ```python
 from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import BernoulliNB # BernoulliNB is designed for binary features
 
-gaussian = GaussianNB()
-gaussian.fit(X_train, Y_train)
-Y_pred = gaussian.predict(X_test)
+nb = GaussianNB()
+nb.fit(X_train, Y_train)
+Y_pred = nb.predict(X_test)
+
+# To extract what the most important features to the model are
+# Get only the Naive Bayes step from the pipeline
+nb = model.named_steps['naive-bayes']
+
+# Each unique word is a feature. 
+# The probabilities for each word are stored as log probabilites as log(P(A|f)) where f is a given feature
+# The reason these are stored as log probabilities is because the actual values are ver low 
+# -> Log stop underflow errors where small probabilities are just rounded to zeros
+# Ofc, since the probabilities are multiplied together (check Naive Bayes theorem), a single value of 0 will
+# result in the whole answer always being 0
+feature_probabilities = nb.feature_log_prob_
+
+# Get the top features' indices
+top_features = np.argsort(-nb.feature_log_prob_[1])[:50]
 ```
 
 # Perceptron
@@ -197,10 +213,21 @@ Y_pred = random_forest.predict(X_test)
 random_forest.score(X_train, Y_train)
 ```
 
+# Cross-fold validation
+```python
+from sklearn.model_selection import cross_val_score
+import numpy as np
+
+# To use f1-score instead of accuracy, change 'accuracy' to 'f1'
+scores = cross_val_score(model_or_pipeline, X, y, scoring = 'accuracy')
+print("Score: {:.3f}".format(np.mean(scores)))
+```
+
 # Pipeline
 - Pipelines store the steps in your data mining workflow. They can take your raw data in, perform all the necessary transformations, and then create a prediction.
 ```python
 from sklearn.pipeline import Pipeline
+import numpy as np
 
 # Take a list of steps as input 
 # All steps are Transformers while the last step needs to be an Estimator
@@ -209,7 +236,36 @@ scaling_pipeline = Pipeline([('scale', MinMaxScaler()),
                              ('predict', KNeighborsClassifier())])
 
 # pipelines has type `estimator` so we can use them in functions such as `cross_val_score`
-scores = cross_val_score(scaling_pipeline, X, y, scoring='accuracy')                             
+scores = cross_val_score(scaling_pipeline, X, y, scoring='accuracy')       
+print("Score: {:.3f}".format(np.mean(scores)))                      
+```
+- We can get a specific step out of a pipeline
+```python
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction import DictVectorizer
+
+pipeline = Pipeline([('vectorizer', DictVectorizer()), ('naive-bayes', BernoulliNB()) ])
+
+model = pipeline.fit(X, y)
+
+# Get the Naive Bayes step
+nb = model.named_steps['naive-bayes']
+
+# Get the vectorizer step
+dv = model.named_steps['vectorizer']
+```
+- Customed transformer
+
+This is for when we want to use our customed transformer in a Pipeline
+```python
+from sklearn.base import TransformerMixin
+
+class CustomedTransformer(TransformerMixin):
+    def fit(self, X, y):
+        return <something here> # can return self
+
+    def transform(self, X):
+        return <something here> 
 ```
 
 # Testing multiple parameters' values to tune model's parameters
