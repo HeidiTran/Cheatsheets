@@ -148,6 +148,31 @@ How to build a random forest
 - When creating many decision trees from similar data, the features that are used for the first few decision nodes in the trees tend to be similar &rightarrow; choose a random subset of the features to perform our data splits on
 > Def: Random forests are randomly built trees using randomly chosen samples using randomly chosen features.
 
+### 4. Naive Bayes
+> Naive Bayes is a classification algo that utilizes Bayes's theorem to compute the probability that a new data sample belongs to a particular class.
+
+Pros: works quickly since it's native, performs well in a many contexts, used for classification of many different feature types and formats
+
+> Bayes's Theorem
+> ![](images/Bayes_Theorem.jpeg)
+> Usually, B is usually *we observed this sample* and A is *does the sample belong to this class* (the class prediction)
+> - P(B) can be difficult to compute as the sample is a complex interaction between different features, but it's constant across all classes &rightarrow; we don't need to compute it since all we do in the final step is compare relative values
+> - P(B|A) could be difficult to compute due to the different features &rightarrow; **naively assume that each feature is independent of each other**. Rather than computing P(B|A), we compute the probability of each feature B1, B2, B3,... and multiply them together P(B|A) = P(B1|A) x P(B2|A) x ... x P(Bn|A)
+
+### 5. Support Vector Machines
+> Def: Classification algos try to draw a separating line between the two (or a hyperplane in higher-dimentions) as the best line of separation. For a line separating the two classes, SVM try to find the line with the maximum distance from the line to any point in each class
+
+
+### Example of clasification: Authorship Attribution
+> In **authorship attribution** we aim to identify which of a set of authors wrote a particlular document ~ classifying authorship.
+
+Function words (words with little meaning but are required for creating the language) such as *this*, *that*, *which* can be a good feature for the model.
+
+The more frequently a word is used, the better it is for authorship analysis. The less frequently a word is used, the better it is for content-based text mining.
+
+![](./images/frequencyRelationship.png)
+
+
 # Some keywords
 ### 1. Estimators
 > A common, lightweight interface for classifiers to follow &rightarrow; allows for the standardized implementation and testing of algorithms. 
