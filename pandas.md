@@ -373,8 +373,9 @@ df.plot(kind = 'scatter', x = 'points', y = 'price', linestyle = '--')
 ## **Files**
 - Read and Write to CSV
 ```python
-# Read a file without header i.e the first line of the file is data
-# To give column names use `names`
+# Read a file without header i.e the first line of the file is data -> `header = None`
+# If don't want to set any column as the index column -> `index_col = None`
+# To give column preferred names that are different from the one from the file use `names`
 pd.read_csv('file.csv', header = None, index_col = None, names = ['pop', 'state', 'debt'])
 
 # If the first row of the file is header -> header = 0
@@ -384,7 +385,7 @@ pd.read_csv('file.csv', header = 0)
 pd.read_csv('file.csv', header = None, index_col = 1)
 
 # Parse date columns as Date object
-pd.read_csv('file.csv', parse_date = ["DateCol1", "DateCol2"])
+pd.read_csv('file.csv', parse_dates = ["DateCol1", "DateCol2"])
 
 # Skip rows -> pass in row indexes
 pd.read_csv('file.csv', skiprows = [0, 2, 3])
