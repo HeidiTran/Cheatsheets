@@ -37,18 +37,29 @@ from sklearn.preprocessing import Binarizer
 ```
 
 # Encode categorical features
+- Encode one categorical string columns
+```python
+from sklearn.preprocessing import OneHotEncoder
+onehot = OneHotEncoder()
+encodedCol = onehot.fit_transform(dataset[["CatCol"]]).todense()
+```
+
+- Encode multiple categorical columns with the same encoder
 ```python
 # Encode categorical data into integer values
 from sklearn.preprocessing import LabelEncoder
 encoding = LabelEncoder()
 encoding.fit(dataset["CategoricalColumnName"].values)
-encoded = encoding.transform(dataset["CategoricalColumnName"].values)
-newColumns = encoded].T
+encodedCol1 = encoding.transform(dataset["CatCol1"].values)
+encodedCol2 = encoding.transform(dataset["CatCol2"].values)
+newColumns = np.vstack([encodedCol1, encodedCol2]).T
 
 from sklearn.preprocessing import OneHotEncoder
 onehot = OneHotEncoder()
 newColumns = onehot.fit_transform(newColumns).todense()
-newDataset = np.hstack([dataset, newColumns])
+
+# oldColumns = dataset["col1", "col2"].values
+newDataset = np.hstack([oldColumns, newColumns])
 ```
 
 # Split 
@@ -220,7 +231,7 @@ import numpy as np
 
 # To use f1-score instead of accuracy, change 'accuracy' to 'f1'
 scores = cross_val_score(model_or_pipeline, X, y, scoring = 'accuracy')
-print("Score: {:.3f}".format(np.mean(scores)))
+print("Accuracy: {0:.1f}%".format(np.mean(scores) * 100))
 ```
 
 # Pipeline
@@ -237,7 +248,7 @@ scaling_pipeline = Pipeline([('scale', MinMaxScaler()),
 
 # pipelines has type `estimator` so we can use them in functions such as `cross_val_score`
 scores = cross_val_score(scaling_pipeline, X, y, scoring='accuracy')       
-print("Score: {:.3f}".format(np.mean(scores)))                      
+print("Accuracy: {0:.1f}%".format(np.mean(scores) * 100))                    
 ```
 - We can get a specific step out of a pipeline
 ```python
