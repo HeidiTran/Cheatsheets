@@ -37,16 +37,40 @@ from sklearn.preprocessing import Binarizer
 ```
 
 # Encode categorical features
-- Encode one categorical string columns
+Machine learning models require all input and output variables to be numeric
+
+## Integer encoding
+> `OrdinalEncoder`, `LabelEncoder` aka integer encoding encodes categorical features as an integer array. Usually the integer values start at zero. (eg: "small" -> 0, "medium" -> 1, "large" -> 2
+>
+> &rightarrow; use for encoding categorical variables that have a natural rank ordering
+
+- Encode with `LabelEncoder` (Use `OrdinalEncoder` instead for input variables that are organized into rows and columns such as amatrix)
+```python
+from sklearn.preprocessing import LabelEncoder
+lblEncoder = LabelEncoder()
+encodedCol = lblEncoder.fit_transform(dataset[["CatCol"]].values.ravel())
+dataset["EncodedCol"] = encodedCol
+
+# To get all the unique category
+lblEncoder.classes_
+```
+
+## One-Hot Encoding
+The encoder is fit on the training dataset, which likely contains at least one example of all expected labels for each categorical variable if you don't specify the list of labels. However, if new data contains catgories not seen in the training dataset, the `handle_unknown` arg can be set to `ignore` to not raise an error, which will result in a zero value for each label.
+> `OneHotEncoder` encodes categorical features as a one-hot numeric array (eg: "overcast" -> [1, 0, 0], "rainy" -> [0, 1, 0], "sunny" -> [0, 0, 1])
+>
+> &rightarrow; use for encoding for categorical variables that do not have a natural rank ordering
+
+- Encode one categorical string columns with `OneHotEncoder`
 ```python
 from sklearn.preprocessing import OneHotEncoder
 onehot = OneHotEncoder()
 encodedCol = onehot.fit_transform(dataset[["CatCol"]]).todense()
 ```
 
-- Encode multiple categorical columns with the same encoder
-```python
-# Encode categorical data into integer values
+- Encode multiple categorical columns with the same encoder with `OneHotEncoder`
+```python 
+# First, encode values as integer
 from sklearn.preprocessing import LabelEncoder
 encoding = LabelEncoder()
 encoding.fit(dataset["CategoricalColumnName"].values)
@@ -60,6 +84,19 @@ newColumns = onehot.fit_transform(newColumns).todense()
 
 # oldColumns = dataset["col1", "col2"].values
 newDataset = np.hstack([oldColumns, newColumns])
+```
+
+## Dummy Variable Encoding
+> Represents C categories with C - 1 binary variables (eg: "overcast" -> [0, 0], "rainy" -> [0, 1], "sunny" -> [1, 0])
+>
+> &rightarrow; less reduntdant than one-hot encoding
+>
+> &rightarrow; Some models such as linear regression model requires it since the output of one hot encoding cannot be inverted and the linear regression coefficients cannot be calculated using linear algebra.
+
+```python
+# First way using pandas
+# Prefix all new dummy columns with "Dummy"
+pd.get_dummies(dataset, columns = ["CatCol1", "CatCol2"], drop_first = True, prefix="Dummy", prefix_sep = "")
 ```
 
 # Split 
