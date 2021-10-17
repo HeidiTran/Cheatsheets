@@ -160,7 +160,10 @@ Pros: works quickly since it's native, performs well in a many contexts, used fo
 > - P(B|A) could be difficult to compute due to the different features &rightarrow; **naively assume that each feature is independent of each other**. Rather than computing P(B|A), we compute the probability of each feature B1, B2, B3,... and multiply them together P(B|A) = P(B1|A) x P(B2|A) x ... x P(Bn|A)
 
 ### 5. Support Vector Machines
-> Def: Classification algos try to draw a separating line between the two (or a hyperplane in higher-dimentions) as the best line of separation. For a line separating the two classes, SVM try to find the line with the maximum distance from the line to any point in each class
+> Def: Classification algos try to draw a separating line between the two (or a hyperplane in higher-dimentions) as the best line of separation. For a line separating the two classes, SVM try to find the line with the maximum distance from the line to any point in each class. When classifying new samples, if the sample falls above the line, SVM predicts it as one class, else, it predicts it as the other class.
+
+- C parameter: How much the classifier should aim to predict all training samples correctly at the risk of overfitting. Higher C value &rightarrow; line of separation with a smaller margin, aiming to classify all training samples correctly. Lower C value &rightarrow; line of separation with a larger margin even if that means some training samples are incorrectly classified.
+- Kernel parameter: (Something about embed the data on to a higher dimensional space so we can separated them linearly)
 
 
 ### Example of clasification: Authorship Attribution
