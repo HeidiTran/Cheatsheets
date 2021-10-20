@@ -108,6 +108,7 @@ Apostrophe (`'`) is a valid character to use in a function name. We usually use 
 > Parameters and return type are separated by `->` with the return type always coming last in the declaration
 ```haskell
 -- Define function hello that take 0 param
+hello :: String
 hello = "Hello World"
 
 -- Define function doubleMe that take 1 param
@@ -118,6 +119,54 @@ doubleMe x = x + x
 -- equiv to doubleUs x y = doubleMe x + doubleMe y
 doubleUs :: Int -> Int -> Int
 doubleUs x y = x * 2 + y * 2 
+```
+
+- Pattern Matching
+```haskell
+-- When the passed arg conforms to a specified pattern, the corresponding function body will be used
+
+lucky :: Int -> String
+lucky 7 = "LUCKY NUMBER SEVEN!"
+lucky x = "Sorry, you're out of luck, pal!"
+
+-- Example factorial
+factorial :: Integer -> Integer
+factorial 0 = 1
+factorial n = n * factorial (n - 1)
+
+-- You can match with the empty list `[]`
+-- A pattern like `x:xs` will bind the head of the list to `x` and the rest of it to `xs`
+head' :: [a] -> a
+head' [] = error "Can't call head on an empty list, dummy!"
+head' (x:_) = x
+
+-- As-patterns match the list elems as usual but you can easily access the original list
+-- <original list name>@<pattern>
+firstLetter :: String -> String
+firstLetter "" = "Empty string, whoops!"
+firstLetter all@(x:xs) = "The first letter of " ++ all ++ " is " ++ [x]
+```
+
+- Guards (replace complex `if-else` block)
+```haskell
+bmiTell :: Double -> Double -> String
+bmiTell weight height
+    | bmi <= skinny = "You're underweight, eat more!"
+    | bmi <= normal = "Looking good!"
+    | bmi <= fat    = "You're overweight. Let's work out together!"
+    | otherwise     = "You're obese. Go see a doctor."
+    where bmi = weight / height ^ 2
+          skinny = 18.5
+          normal = 25.0
+          fat = 30.0
+-- for `where` clauses, all variables need to align in 1 column, so Haskell knows that they belong to the same block          
+```
+
+- Function inside where block
+```haskell
+calcBmis :: [(Double, Double)] -> [Double]
+calcBmis xs = [bmi w h | (w, h) <- xs]
+    where bmi weight height = weight / height ^ 2
 ```
 
 # List
@@ -157,6 +206,7 @@ length [1, 2, 3] -- 3
 - Append to the front
 ```haskell
 5:[1,2] -- [5, 1, 2]
+1:2:3:[] -- [1, 2, 3]
 'A':" small cat" -- "A small cat"
 ```
 
