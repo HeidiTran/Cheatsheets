@@ -32,8 +32,12 @@ show variable
 ```haskell
 min x y -- min(x, y)
 max x y -- max(x, y)
+
+subtract y x -- x - y
 div x y -- x // y (integer division)
+
 succ x  -- x + 1
+compare x y -- returns GT/LT/EQ
 
 -- Examples
 succ 9 + max 5 4 + 1 -- 16
@@ -97,6 +101,17 @@ minBound :: Int -- -9223372036854775808
 maxBound :: Int -- 9223372036854775807
 ```
 
+# Variable assignments with `let`
+> TODO: Fill this section with explanation
+```haskell
+quicksort :: (Ord a) => [a] -> [a]
+quicksort [] = []
+quicksort (x:xs) =
+    let smallerOrEqual = filter (<= x) xs
+        larger = filter (> x) xs
+    in  quicksort smallerOrEqual ++ [x] ++ quicksort larger
+```
+
 # Functions
 - Function Name
 
@@ -119,6 +134,11 @@ doubleMe x = x + x
 -- equiv to doubleUs x y = doubleMe x + doubleMe y
 doubleUs :: Int -> Int -> Int
 doubleUs x y = x * 2 + y * 2 
+
+-- Define function that takes a function and 1 param
+applyTwice :: (a -> a) -> a -> a
+applyTwice f x = f (f x)
+applyTwice (++ " HAHA") "HEY" -- "HEY HAHA HAHA"
 ```
 
 - Pattern Matching
@@ -149,6 +169,8 @@ firstLetter all@(x:xs) = "The first letter of " ++ all ++ " is " ++ [x]
 
 - Guards (replace complex `if-else` block)
 ```haskell
+-- `otherwise` clause can be omitted
+
 bmiTell :: Double -> Double -> String
 bmiTell weight height
     | bmi <= skinny = "You're underweight, eat more!"
@@ -159,7 +181,8 @@ bmiTell weight height
           skinny = 18.5
           normal = 25.0
           fat = 30.0
--- for `where` clauses, all variables need to align in 1 column, so Haskell knows that they belong to the same block          
+-- for `where` clauses, all variables need to align in 1 column, so Haskell knows that they belong to the same block         
+-- We can refactor it to (skinny, normal, fat) = (18.5, 25.0, 30.0)
 ```
 
 - Function inside where block
@@ -167,6 +190,16 @@ bmiTell weight height
 calcBmis :: [(Double, Double)] -> [Double]
 calcBmis xs = [bmi w h | (w, h) <- xs]
     where bmi weight height = weight / height ^ 2
+```
+
+# Lambdas
+> Def: Anonymous function that we use when we need a function only once. Normally, we make a lambda with the sole purpose of passing it to a higher-order function
+> `\ param1 param2 -> functionBody`
+
+```haskell
+-- These two are equivalent
+map (+3) [1, 2, 3]
+map (\x -> x + 3) [1, 2, 3]
 ```
 
 # List
@@ -330,6 +363,55 @@ zip [1, 2] [3, 4] -- [(1,3),(2,4)]
 ```
 
 [(a, b, c) | c <- [1..10], a <- [1..c], b <- [1..a], a + b + c == 24, a^2 + b^2 == c^2]
+
+# High-order functions
+> Def: Functions that take functions as param and/or return functions as return values
+
+### Curried functions 
+> Def: A function that always takes exactly one parameter. Then when it's called with that parameter, it returns a function that takes the next parameter, and so on. 
+> - Allow creation of a *partially applied function* &rightarrow; easy to create functions on the fly to pass to other functionS
+
+`->` symbol means it's a function that takes whatever is on the *left* side of the arrow and returns a value whose type is indicated on the *right* side of the arrow.
+```haskell
+-- a function that takes a value of type `a`
+-- and returns a function that also takes a value of type `a` and returns a value of type `a`
+max :: (Ord a) => a -> (a -> a)
+
+-- Example of partially applied function
+multThree :: Int -> Int -> Int -> Int
+multThree x y z = x * y * z
+
+multTwoNumsWithNine :: Int -> Int -> Int
+multTwoNumsWithNine = multThree 9
+multTwoNumsWithNine 2 3 -- 54
+```
+
+- `map()`
+```haskell
+-- map :: (a -> b) -> [a] -> [b]
+map (+3) [1,5,3,1,6] -- [4,8,6,4,9]
+map (++ "!") ["BIFF", "BANG", "POW"] -- ["BIFF!","BANG!","POW!"]
+```
+
+- `filter()`
+```haskell
+-- filter :: (a -> Bool) -> [a] -> [a]
+filter (>3) [1,5,3,2,1,6,4,3,2,1] -- [5,6,4]
+```
+
+- `foldl()` and `foldr()`
+NOTE: `foldr` works on infinite lists, `foldl` does not
+```haskell
+-- foldl immediately invokes `f` on the first list item `x` and the base value `v`
+-- The result will be the new base value to `foldl`
+-- (((0 + 1) + 2) + 3)
+foldl (+) 0 [1, 2, 3] -- 6
+
+-- foldr invokes `f` on the first list item `x` and the recursive case
+-- Once, `foldr` is recursively called enough times to exhaust the list, the base case is returned
+-- (1 + (2 + (3 + 0)))
+foldr (+) 0 [1, 2, 3] -- 6
+```
 
 # Patterns in functional programming
 - Start with a certain set of candidate solutions, and successively apply transormations and filters to them until you've narrowed the possibilities down to the one/several solutions
