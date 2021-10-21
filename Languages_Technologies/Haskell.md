@@ -20,6 +20,7 @@ show variable
 
 # Math 
 > Exactly the same is typing normal math in other programming languages
+> Note that math operators (`+`, `*`, `-`, `/`, etc.) are functions.
 ```haskell
 -- Mod
 24 `mod` 7 -- 3
@@ -101,8 +102,34 @@ minBound :: Int -- -9223372036854775808
 maxBound :: Int -- 9223372036854775807
 ```
 
-# Variable assignments with `let`
-> TODO: Fill this section with explanation
+# Type Class
+> **Def:** An interface that defines some behavior. If a type is an *instance* of a type class, then it supports and implements the behavior the type class describes.
+>
+> **TLDR;** A type class specifies a bunch of functions and when we decide to make a type an instance of a type class, we define what those functions mean for that type.
+
+`=>` is a *class constraint* &rightarrow; Everything before the `=>` must be an instance of that class
+
+```haskell
+-- The equality function takes any two values that are of the same type and returns a `Bool`
+-- The type of those 2 values must be an instance of the `Eq` class
+(==) :: (Eq a) => a -> a -> Bool
+```
+- Common type classes
+    - `Eq` supports equality testing -> It covers these functions: `==` and `\=`
+    - `Ord` is a type class for types whose values can be put in some order. It covers these functions: `>`, `<`, `>=`, and `<=`
+- Some other notes
+    - One type can be an instance of many type classes
+        - `Char` type is an instance of `Eq` and `Ord`
+    - Once type class can have many types as instances
+    - Sometimes, a type must first be an instance of one type class to be allowed to become an instance of another  
+        - eg: To be an instance of `Ord`, a type must first be an instance of `Eq`
+
+# Variable assignments with `let` expression
+> Template: `let <bindings> in <expression>` The variables defined in `let` are visible within the entire `let` expression
+>
+> Pros: Are expressions + allow you to bind to variables anywhere
+>
+> Cons: Are local + don't span across guards
 ```haskell
 quicksort :: (Ord a) => [a] -> [a]
 quicksort [] = []
@@ -110,6 +137,22 @@ quicksort (x:xs) =
     let smallerOrEqual = filter (<= x) xs
         larger = filter (> x) xs
     in  quicksort smallerOrEqual ++ [x] ++ quicksort larger
+```
+
+Since `let` is an expression, you can use it in  many scenarios
+```haskell
+-- Introduce functions in a local scope
+[let square x = x * x in (square 5, square 3)] -- [(25,9)]
+
+-- Separated expressions by `;`
+let a = 100; b = 200; c = 300 in a*b*c -- 6000000
+
+-- Deconstruct a tuple and bind them to names (Pattern matching with `let`)
+let (a, b, c) = (1, 2, 3) in a + b + c -- 6
+
+-- Use in list comprehensions
+calcBmis :: [(Double, Double)] -> [Double]
+calcBmis xs = [bmi | (w, h) <- xs, let bmi = w / h ^ 2]
 ```
 
 # Functions
@@ -139,6 +182,13 @@ doubleUs x y = x * 2 + y * 2
 applyTwice :: (a -> a) -> a -> a
 applyTwice f x = f (f x)
 applyTwice (++ " HAHA") "HEY" -- "HEY HAHA HAHA"
+```
+
+- Throw errors
+```haskell
+head' :: [a] -> a
+head' [] = error "Can't call head on an empty list,!"
+head' (x:_) = x
 ```
 
 - Pattern Matching
@@ -193,7 +243,7 @@ calcBmis xs = [bmi w h | (w, h) <- xs]
 ```
 
 # Lambdas
-> Def: Anonymous function that we use when we need a function only once. Normally, we make a lambda with the sole purpose of passing it to a higher-order function
+> **Def:** Anonymous function that we use when we need a function only once. Normally, we make a lambda with the sole purpose of passing it to a higher-order function
 > `\ param1 param2 -> functionBody`
 
 ```haskell
@@ -365,10 +415,10 @@ zip [1, 2] [3, 4] -- [(1,3),(2,4)]
 [(a, b, c) | c <- [1..10], a <- [1..c], b <- [1..a], a + b + c == 24, a^2 + b^2 == c^2]
 
 # High-order functions
-> Def: Functions that take functions as param and/or return functions as return values
+> **Def:** Functions that take functions as param and/or return functions as return values
 
 ### Curried functions 
-> Def: A function that always takes exactly one parameter. Then when it's called with that parameter, it returns a function that takes the next parameter, and so on. 
+> **Def:** A function that always takes exactly one parameter. Then when it's called with that parameter, it returns a function that takes the next parameter, and so on. 
 > - Allow creation of a *partially applied function* &rightarrow; easy to create functions on the fly to pass to other functionS
 
 `->` symbol means it's a function that takes whatever is on the *left* side of the arrow and returns a value whose type is indicated on the *right* side of the arrow.
