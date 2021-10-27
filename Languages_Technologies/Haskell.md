@@ -13,6 +13,12 @@ ghci
 :l HelloWorld   
 ```
 
+### Modules
+```bash
+# Load functions from modules
+:m + Data.List Data.Map Data.Set
+```
+
 # Print
 ```haskell
 show variable
@@ -36,6 +42,7 @@ max x y -- max(x, y)
 
 subtract y x -- x - y
 div x y -- x // y (integer division)
+negate x -- x * (-1)
 
 succ x  -- x + 1
 compare x y -- returns GT/LT/EQ
@@ -252,6 +259,52 @@ map (+3) [1, 2, 3]
 map (\x -> x + 3) [1, 2, 3]
 ```
 
+# Function application with `$`
+> **Def:** `$` is the function application operator. While function application with a space is left-associative (`f a b c` is the same as `(((f a) b) c)`), function application with `$` is right-associative (`f $ g $ x` is the same as `f $ (g $ x)`).
+>
+> **TLDR;** You can imagine `$` as almost being the equivalent of writing an opening parenthesis, and then writing a closing parenthesis on the far right side of the expression
+
+```haskell
+-- All of these are equivalent
+sum (filter (> 10) (map (*2) [2..10]))
+sum $ filter (> 10) (map (*2) [2..10])
+sum $ filter (> 10) $ map (*2) [2..10]
+```
+
+In addition, `$` let you treat function application like another function &rightarrow; you can map function application over a list of function
+```haskell
+map ($ 3) [(4+), (10*), (^2)] -- [7.0,30.0,9.0]
+
+-- Equiv to [(4+) $ 3, (10*) $ 3, (^2) $ 3]
+```
+
+# Function Composition with `.`
+> In Math *(f . g)(x) = f(g(x))*. Similarly, in Haskell `f (g (z x))` is the same as `(f . g . z) x` since `.` is right-associative
+```haskell
+-- Definition
+(.) :: (b -> c) -> (a -> b) -> a -> c
+f . g = \x -> f (g x)
+```
+Examples:
+```haskell
+-- These two are equivalent
+map (\x -> negate (abs x)) [5,-3,-6] -- [-5,-3,-6]
+map (negate . abs) [5,-3,-6]
+
+-- These three are equivalent
+sum (replicate 5 (max 6.7 8.9))
+(sum . replicate 5) (max 6.7 8.9)
+sum . replicate 5 $ max 6.7 8.9 -- Simplified
+```
+Note: For functions that take several params, to use them in function composition, we usually must partially apply them so that each function takes just one param
+```haskell
+-- Contrive example but demonstrate the point. These two are equivalent
+map (*3) $ zipWith max [1,2] [4,5]
+(map (*3) . zipWith max [1,2]) [4,5]
+
+-- Notice how function partial `zipWith max [1,2]` only takes just one more param
+```
+
 # List
 
 Is *homogeneous* i.e. can only store elements of the same type
@@ -329,6 +382,9 @@ product [1, 2, 3, 4] -- 24
 -- Check if an elem is in a list
 4 `elem` [3, 4, 5] -- True
 10 `elem` [3, 4, 5] -- False
+
+-- Check if any elem satisfy a predicate
+any (> 4) [1, 2, 3] -- False
 ```
 
 - Range
@@ -412,8 +468,6 @@ snd ("Wow", 11) -- 11
 zip [1, 2] [3, 4] -- [(1,3),(2,4)]
 ```
 
-[(a, b, c) | c <- [1..10], a <- [1..c], b <- [1..a], a + b + c == 24, a^2 + b^2 == c^2]
-
 # High-order functions
 > **Def:** Functions that take functions as param and/or return functions as return values
 
@@ -461,6 +515,63 @@ foldl (+) 0 [1, 2, 3] -- 6
 -- Once, `foldr` is recursively called enough times to exhaust the list, the base case is returned
 -- (1 + (2 + (3 + 0)))
 foldr (+) 0 [1, 2, 3] -- 6
+```
+
+- `foldl'` in `Data.List` can do what `foldl` does but instead of deferring computations that can cause stack overflow, it would evaluate computations immediately. &rightarrow; `foldl'` is better to use than `foldl` on large list of million elems
+
+# Modules
+- Import
+```haskell
+-- Import modules
+-- Cons: Call to `filter` will make ghci confused since Data.List has its own `filter`
+import Data.List
+
+-- Import modules + rename
+import qualified Data.Map as M
+
+-- Import some functions from a module
+import Data.List (nub, sort)
+```
+
+- Create
+```haskell
+-- File name should be MyModule.hs
+-- This module can only be imported by modules in the same folder
+module MyModule 
+( exportedFunction1
+, exportedFunction2
+, exportedFunction3
+) where
+
+-- <Define exportedFunction1, exportedFunction2, exportedFunction3 here>
+-- <Define helperFunctions here if necessary >
+```
+
+- Create hierarchical modules
+
+Each module can have a number of submodules, which can have submodules of their own
+
+```haskell
+-- Creating `Geometry` module that has 2 submodules
+-- First, make a folder called `Geometry`. We'll put two files: `Sphere.hs` and `Cube.hs`
+
+-- Inside `Sphere.hs`
+module Geometry.Sphere 
+(volume
+, area
+) where 
+-- <define functions here>
+
+-- Inside `Cube.hs`
+module Geometry.Cube
+( volume
+, area
+) where
+-- <define functions here>
+
+-- To import submodules
+import qualified Geometry.Sphere as Sphere
+import qualified Geometry.Cube as Cube
 ```
 
 # Patterns in functional programming
