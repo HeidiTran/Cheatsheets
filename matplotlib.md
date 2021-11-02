@@ -13,15 +13,19 @@ import matplotlib.pyplot as plt
 ```python
 # Create new figure
 fig = plt.figure()
+fig = plt.figure(figsize=(12, 10))  # with figure size
 
 # Add an overall title to figure
-fig.suptitle("Overall title")
+fig.suptitle("Overall title", fontsize=16)
 
 # Create subplot(s)
 # This means the figure should be 2 x 2 -> contains 4 plots. The last param denote the subplot we're selecting
 ax1 = fig.add_subplot(2, 2, 1)
 ax2 = fig.add_subplot(2, 2, 2)
 ax3 = fig.add_subplot(2, 2, 3)
+
+# This means the figure only has one plot
+ax = fig.add_subplot(1, 1, 1)
 
 # Set figure size
 plt.figure(figsize=(12, 10))
@@ -96,19 +100,19 @@ ax1.plot(data1, label = 'Male')
 ax1.set(xlabel = 'X-Axis', ylabel = 'Y-Axis')
 
 # Legend's location
-ax1.legend(loc = 'best')
+ax1.legend(loc = 'best', fontsize = 14)
 
 # Ticks (set_yticks for y axis)
 ax1.set_xticks([0, 25, 50, 75, 100])
-ax1.set_xticklabels(["low", 25, "mid", 75, "hi"], rotation = 30, fontsize = 'small')
-ax1.set_xlabel('Cost')
+ax1.set_xticklabels(["low", 25, "mid", 75, "hi"], rotation = 30, fontsize = 'small', weight = 'bold')
+ax1.set_xlabel('Cost', fontsize = 14)
 
 # Format ticks' labels
 yAxixFormatter = FuncFormatter(lambda x, pos : int(x))  # `x` is the value, `pos` is tick position
 ax1.yaxis.set_major_formatter(yAxixFormatter)
 
 # Subplot title
-ax1.set_title("My plot title", y = 0.2) # y default is 0.98
+ax1.set_title("My plot title", fontsize = 16, y = 0.2) # y default is 0.98
 
 # Axis's limits
 ax1.set(xlim = [0, 100], ylim = [-100, 100])
