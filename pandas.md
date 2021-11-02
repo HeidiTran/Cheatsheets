@@ -325,7 +325,8 @@ df = df.drop_duplicates(['state'])  # only drop rows where state col is duplicat
 
 - Common functionalities
 ```python
-# Count the number of rows in each group of a categorical column
+# Count the number of rows in each group of a categorical column 
+# Very useful for plotting distribution of categorical column
 df['state'].value_counts()
 
 # Apply a function for each elem (only works for DataFrame)
