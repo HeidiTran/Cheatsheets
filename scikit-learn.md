@@ -105,10 +105,11 @@ pd.get_dummies(dataset, columns = ["CatCol1", "CatCol2"], drop_first = True, pre
 from sklearn.model_selection import train_test_split
 
 '''
+@stratify: Use this as the class label, data will be splitted in a way such that the training subset and the testing subset have the same proportions of class labels as the input dataset
 @test_size: proportion of the test split (default is 0.25)
 @random_state: controls the shuffling applied to the data before the split -> Setting the random state will give the same split every time the same value is entered. It will look random, but the algo used is deterministic and the output will be consistent. To get truly random results that change every time you run, set random_state to None
 '''
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify = y, test_size = 0.2, random_state = 0)
 ```
 
 # Evaluate
@@ -136,6 +137,10 @@ print(confusion_matrix(y_test, y_pred))
 # Accuracy score
 from sklearn.metrics import accuracy_score
 print(f'Accuracy is: {accuracy_score(y_pred,y_test)}')
+
+# Calculate precision, recall, f1-measure, and support
+from sklearn.metrics import precision_recall_fscore_support
+precision_recall_fscore_support(y_test, y_pred, average = 'weighted')
 ```
 
 # Logistic Regression
@@ -317,7 +322,7 @@ class CustomedTransformer(TransformerMixin):
 ```
 
 # Testing multiple parameters' values to tune model's parameters
-- Use `GridSearchCV`
+- Use `GridSearchCV` i.e. Grid Search Cross Validations
 ```python
 # This example is testing on Random Forests
 
