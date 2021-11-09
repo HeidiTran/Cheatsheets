@@ -272,7 +272,7 @@ git cherry-pick -n <commitHash>
 
 - Revert local changes for a single file
 ```bash
-git checkout <filePath>
+git checkout -- <filePath>
 
 # To revert for multiple files: git checkout -- <file1Path> <file2Path>
 ```
