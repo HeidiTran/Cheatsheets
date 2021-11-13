@@ -55,6 +55,10 @@ data.fillna(method = 'ffill', inplace = True)   # with `ffill` method
 data.replace([-200, -201], 200) # replace all -200 and -201 with 200
 data.replace({-200: 200, -201: 201})
 
+# Replace with boolean expressions
+# All values < 1 will be replaced with False
+data[data < 1] = False
+
 # Check whether a row is a duplicate -> return a boolean Series
 data.duplicated()
 ```
@@ -291,6 +295,16 @@ df.sort_index(axis = 1, ascending = False)
 # Default inplace = False -> so return a new df
 df.sort_values(by = 'pop', ascending = False, inplace = True)
 df.sort_values(by = ['pop', 'debt'])
+
+# Sort values with custom sort
+# In this example, we want to sort df['size'] by correct shirt's size
+from pandas.api.types import CategoricalDtype
+cat_size_order = CategoricalDtype(
+    ['XS', 'S', 'M', 'L', 'XL'], 
+    ordered=True
+)
+df['size'] = df['size'].astype(cat_size_order)
+df.sort_values('size')
 ```
 
 - Working with missing/duplicated data
@@ -298,6 +312,9 @@ df.sort_values(by = ['pop', 'debt'])
 # Check if any data's values is null/not null
 df.isnull()   # equiv to pd.isnull(df)
 df.notnull()   # equiv to pd.notnull(df) 
+
+# Only keep records where values in a column is NOT null
+df = df[~df['ColumnName'].isnull()]
 
 # Drop ANY rows containing a missing value
 df = df.dropna()
@@ -508,6 +525,8 @@ tips.pivot_table(['tip_pct', 'size'], index=['time', 'day'],
                 columns='smoker')
 
 # If some combinations are NA -> pass in fill_value
+# This means each row is indexed in order of 'time', 'size', and 'smoker' + the columns would be day of the week
+# The value in each cell would be the mean of 'tip_pct'
 tips.pivot_table('tip_pct', index=['time', 'size', 'smoker'],
                  columns='day', aggfunc='mean', fill_value=0)
 
