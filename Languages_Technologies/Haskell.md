@@ -11,6 +11,10 @@ ghci
 ```bash
 # Load HelloWorld.hs from the current directory
 :l HelloWorld   
+:load HelloWorld
+
+# After modifying the current script, reload the script
+:reload
 ```
 
 ### Modules
@@ -19,9 +23,15 @@ ghci
 :m + Data.List Data.Map Data.Set
 ```
 
-# Print
+# Print + Comment
 ```haskell
+-- print
 show variable
+
+{-
+This is a 
+multi-line comment
+-}
 ```
 
 # Math 
@@ -33,6 +43,9 @@ show variable
 
 -- Exponential
 4^2 -- 16.0
+
+-- Pi value
+pi -- 3.141592653589793
 ```
 
 ### Common built-in Math functions
@@ -75,12 +88,17 @@ even 8  -- True
 if expression
 then value1
 else value2
+
+-- Conditional expression requires that both possible results have the same type
+-- This will throw type error
+if True then 1 else False
 ```
 
 # Types
 - Check types
 ```haskell
-:t value
+:t <expression>
+:type <expression>
 
 -- Examples
 :t 'a' -- 'a' :: Char
@@ -95,6 +113,15 @@ else value2
     - `Double`: real floating point number with double precision
     - `Bool` : Boolean type
     - `Char` : Unicode character
+```bash
+# Get type's definition
+:info <type>
+
+# Example
+:info Bool
+type Bool :: *
+data Bool = False | True
+```
 
 - Parse string 
 ```haskell
@@ -169,6 +196,8 @@ calcBmis xs = [bmi | (w, h) <- xs, let bmi = w / h ^ 2]
 
 Apostrophe (`'`) is a valid character to use in a function name. We usually use `'` to denote either a *strict* version of a function (i.e. one that isn't lazy) or a slightly modified version of a function or variable with a similar name.
 
+A list usually have the suffix `s` on their names to indicate that they may contain multiple values. Eg: a list of numbers might be named `ns`, a list of arbitrary values might be named `xs`, and a list of characters might be named `css`
+
 - Declaration
 > Parameters and return type are separated by `->` with the return type always coming last in the declaration
 ```haskell
@@ -190,6 +219,13 @@ applyTwice :: (a -> a) -> a -> a
 applyTwice f x = f (f x)
 applyTwice (++ " HAHA") "HEY" -- "HEY HAHA HAHA"
 ```
+
+> **Note:** Function application has higher priority than other operators in the language
+> eg: `f a + b` means `(f a) + b` rather than `f (a + b)`
+
+> **Special case for functions with two args:** function can be written between its args by enclosing the name of the function in single back quotes `(``)`
+>
+> ``sum myList `div` length myList`` is equivalent to `div (sum myList) (length myList)`
 
 - Throw errors
 ```haskell
@@ -389,7 +425,7 @@ any (> 4) [1, 2, 3] -- False
 
 - Range
 ```haskell
--- Template: [start..end]
+-- Template: [start..end] (start >= end since ranges only go forwards)
 [1..5] -- [1, 2, 3, 4, 5]
 ['a'..'z'] -- "abcdefghijklmnopqrstuvwxyz"
 
@@ -402,6 +438,7 @@ any (> 4) [1, 2, 3] -- False
 ```haskell
 -- Provide no `end` for a range
 [13, 26, ..] -- [13, 26, 39, ...]
+[0, -1 ..] -- negative numbers
 
 -- `cycle` takes a list and replicates its elems indefinitely to form an infinite list
 take 10 (cycle [1, 2, 3])
@@ -537,14 +574,17 @@ import Data.List (nub, sort)
 ```haskell
 -- File name should be MyModule.hs
 -- This module can only be imported by modules in the same folder
+-- (..) means export all value constructors. We could choose NOT to export any value constructors by removing (..)
 module MyModule 
 ( exportedFunction1
 , exportedFunction2
 , exportedFunction3
+, MyDatatype(..)
 ) where
 
 -- <Define exportedFunction1, exportedFunction2, exportedFunction3 here>
 -- <Define helperFunctions here if necessary >
+-- <Define MyDataType here>
 ```
 
 - Create hierarchical modules
@@ -572,6 +612,38 @@ module Geometry.Cube
 -- To import submodules
 import qualified Geometry.Sphere as Sphere
 import qualified Geometry.Cube as Cube
+```
+
+# New Data Type 
+```haskell
+data Shape = Circle Float Float Float | Rectangle Float Float Float Float
+    deriving (Show) 
+
+-- Make a Circle  
+Circle 10 10 20  
+```
+- `data` keyword &rightarrow; new data type is being defined
+- `Shape`, which is right before `=` denotes the type
+- `Circle` and `Rectangle` are **value constructors** &rightarrow; must start with an uppercase letter
+    - `Circle` value constructor takes 3 params, `Rectangle` value constructor takes 4 params
+    - Value constructors are functions that return a value of a data type
+        - eg: `Circle :: Float -> Float -> Float -> Shape`
+    - Value constructor's name can be the same as the data type's name
+        - eg: `data Point = Point Float Float deriving (Show)`
+- `deriving (Show)` makes type `Shape` part of the `Show` type class &rightarrow; Haskell will know how to display our data type as a string
+
+```haskell
+-- Use record syntax to give value constructors' parameters names
+-- It will automatically create functions that look up the fields `firstName`, `age`, `height`
+-- eg: (autogen) firstName :: Person -> String   
+-- eg: (autogen) age :: Person -> Int  
+
+data Person = Person { firstName :: String
+                     , age :: Int
+                     , height :: Float } deriving (Show)
+
+-- Construct a person (param's order doesn't matter)
+Person {age = 20, height = 6.2, firstName = "A"}                
 ```
 
 # Patterns in functional programming
