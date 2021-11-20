@@ -66,6 +66,9 @@ The encoder is fit on the training dataset, which likely contains at least one e
 from sklearn.preprocessing import OneHotEncoder
 onehot = OneHotEncoder()
 encodedCol = onehot.fit_transform(dataset[["CatCol"]]).todense()
+
+# Turn the rest of the DataFrame into numpy.array, then merge with OHE numpy.array
+newDf = np.hstack([df.values, encodedCol])
 ```
 
 - Encode multiple categorical columns with the same encoder with `OneHotEncoder`
@@ -184,6 +187,7 @@ acc_linear_svc = round(linear_svc.score(X_train, Y_train) * 100, 2)
 ```python
 from sklearn.neighbors import KNeighborsClassifier
 
+# n_neighbors's default value = 5
 knn = KNeighborsClassifier(n_neighbors = 3)
 knn.fit(X_train, Y_train)
 Y_pred = knn.predict(X_test)
