@@ -140,6 +140,8 @@ maxBound :: Int -- 9223372036854775807
 > **Def:** An interface that defines some behavior. If a type is an *instance* of a type class, then it supports and implements the behavior the type class describes.
 >
 > **TLDR;** A type class specifies a bunch of functions and when we decide to make a type an instance of a type class, we define what those functions mean for that type.
+>
+> Type classes **are not the same** as classes in languages like Java, Python, C++, etc.
 
 `=>` is a *class constraint* &rightarrow; Everything before the `=>` must be an instance of that class
 
@@ -151,12 +153,45 @@ maxBound :: Int -- 9223372036854775807
 - Common type classes
     - `Eq` supports equality testing -> It covers these functions: `==` and `\=`
     - `Ord` is a type class for types whose values can be put in some order. It covers these functions: `>`, `<`, `>=`, and `<=`
+    - `Show` is a type class that converts value of different data type to strings 
+    - `Read`is a type class that convert strings to value of specified data type (eg: `read "10" :: Float`)
 - Some other notes
     - One type can be an instance of many type classes
         - `Char` type is an instance of `Eq` and `Ord`
     - Once type class can have many types as instances
     - Sometimes, a type must first be an instance of one type class to be allowed to become an instance of another  
         - eg: To be an instance of `Ord`, a type must first be an instance of `Eq`
+
+> **Note:** In OOP languages, we create objs from classes. In Haskell, we don't make data from type classes. Instead, we make our data type, then think about how it can act.
+> - If it can act like sth that can be equated &rightarrow; make it instance of the `Eq` type class
+> - If it can be ordered &rightarrow; make it an instance of the `Ord` type class
+
+```haskell
+data Size = Small | Medium | Large deriving (Eq, Ord, Show, Read, Bounded, Enum)
+
+-- Eq type class
+Small == Small -- True
+Large > Small -- True
+
+-- Ord type class
+Medium `compare` Small -- GT
+
+-- Show type class
+show Small -- "Small"
+
+-- Read type class
+read "Medium" :: Size -- Medium
+
+-- Bounded type class
+minBound :: Size -- Small
+maxBound :: Size -- Large
+
+-- Enum type class
+succ Medium -- Large
+pred Medium -- Small
+[Small, Small, Large] -- make a list
+[Small .. Large] -- [Small, Medium, Large] (a range)
+```
 
 # Variable assignments with `let` expression
 > Template: `let <bindings> in <expression>` The variables defined in `let` are visible within the entire `let` expression
@@ -644,6 +679,28 @@ data Person = Person { firstName :: String
 
 -- Construct a person (param's order doesn't matter)
 Person {age = 20, height = 6.2, firstName = "A"}                
+```
+
+# Type Constructors - Type Parameters
+> **Type constructor** takes types as parameters to produce new types. eg: the list type takes a type parameter to produce concrete types such as `[Int]` type, `[Char]` type, or a `[[String]]` type.
+>
+> Type parameters are useful when the type that's contained inside the data type's constructors isn't important for the type to work. eg: a list of stuff is a list of stuff no matter what the type of stuff is, a map of key:value enables us to map from any type to any other type.
+
+```haskell
+-- Vector type constructor
+data Vector a = Vector a a a deriving (Show)
+
+-- Adding 2 vectors resulting in a new vector
+vplus :: (Num a) => Vector a -> Vector a -> Vector a 
+```
+- The `Vector` type constructor can create many types: `Vector Int`, `Vector Float`, `Vector Double`
+- `vplus` function can operate on any type of form `Vector a` as long as `a` is an instance of the `Num` type class. &rightarrow; won't work for type `Vector Char` or `Vector Bool`
+- `vplus` function can only operate of vectors of the same type &rightarrow; can't add a `Vector Int` and a `Vector Double`
+- We didn't put class constraint `(Num a) =>` in the type constructor declaration because even if we put it there, we would still need to repeat the constraints when declaring the functions (such as `vplus`)
+
+```haskell
+-- Example type constructor with many type parameters
+data Map k v = ...
 ```
 
 # Patterns in functional programming
