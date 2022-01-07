@@ -1,3 +1,8 @@
+# To start interactive mode in Cmd
+```
+racket
+```
+
 # At the top of your Racket (.rkt) file
 ```scheme
 #lang racket
@@ -25,26 +30,39 @@
 (or #t #t) ; or operator
 ```
 
+# Variables
+```scheme
+; Assign
+(define aVar 'aVal)
+
+; Change the value of a var. Var must be defined first
+; (set! <variable> <value>)
+(set! aVar 'anotherVal)
+```
+
 # List Function
 ```scheme
 '(1 2 3) ; This is a list. Notice that it is surrounded by parentheses BUT it has a ' in front of it. That stops the "function" from evaluating
+
+'(peanut butter) ; Elements inside a list does not need the '
 ```
 - `'(1 2 3)` is similar to `list(1 2 3) `
 - `'` DOES NOT evaluate thing ---> `'(1 (+ 1 2) 3)` is different that `(list 1 (+ 1 2) 3)`
-- `(first L)` takes a list `L` and returns the first element
+- `(first L)` takes a list `L` and returns the first S-expression. `first` is equivalent to `car`. **`fist` only works on non-empty list**
 ```scheme
 (first '(1 2 3)) ; return 1
+(first '(peanut butter)) ; return 'peanut
 (first '((1 2) 3 4)) ; return '(1 2)
 ```
 - `(second L)` like `first` but returns the second element
 ```scheme
 (second '((1 2) 3 4)) ; return 3
 ```
-- `(rest L)` takes a list `L` and returns a list of everything except the first element
+- `(rest L)` takes a list `L` and returns a list of everything except the first element. **`rest` works only on non-empty list**
 ```scheme
 (rest '(1 2 3)) ; return '(2 3)
 ```
-- `cons` construct a new list where the first elem is the first argument
+- `cons` adds any S-expression to the front of a list &rightarrow; `cons` takes 2 args: any S-expressions + any list
 ```scheme
 (cons 1 '()) ; append 1 to an empty list -> return '(1)
 ```
@@ -70,12 +88,13 @@
 ```scheme
 (equal? '(1 2) '(1 2)) ; returns #t
 ```
+- `eq?` takes two non-numeric atoms 
 - `list?` returns `#t` if the provided argument is a list
 ```scheme
 (list? '(1 2 3)) ; returns #t
 (list? 1) ; returns #f
 ```
-- `null?` returns `#t` if the argument is an empty list
+- `null?` takes a list `L` and returns `#t` if the argument is an empty list
 ```scheme
 (null? '()) ; returns #t
 (null? '(1 2 3)) ; returns #f
@@ -145,6 +164,10 @@
 (map (lambda (x) (* x 2)) L)
 ```
 - Reduce right with `foldr` and reduce left with `foldl`
+> The idea behind fold: replace `cons` with a function of our choice, and replace `null` with a value of our choice
+> - `foldr` is called a right-fold cuz it treats function `f` as a right-associative op. Any recursive function on a list can be expressed as a right fold.
+
+![](images/fold.png)
 ```scheme
 (foldr + 0 '(1 2 3 4))	; Equivalent to (+ 1 (+ 2 (+ 3 (+ 4 0))))
 (foldl + 0 '(1 2 3 4))	; Equivalent to (+ 4 (+ 3 (+ 2 (+ 1 0))))
