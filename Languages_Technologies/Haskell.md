@@ -703,5 +703,13 @@ vplus :: (Num a) => Vector a -> Vector a -> Vector a
 data Map k v = ...
 ```
 
+# Type alias
+```haskell
+-- PhoneNumber is an alias for type String
+type PhoneNumber = String
+type Name = String
+type PhoneBook = [(Name, PhoneNumber)]
+```
+
 # Patterns in functional programming
 - Start with a certain set of candidate solutions, and successively apply transormations and filters to them until you've narrowed the possibilities down to the one/several solutions

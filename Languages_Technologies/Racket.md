@@ -79,16 +79,23 @@ racket
 (remove-duplicates '(1 1 2 3)) ; return '(1 2 3)
 ```
 
+- `member` takes an atom and a lst `L` and returns the tail of `L` starting from that atom if that atom is in `L`, else `#f`
+```scheme
+(member 1 '(1 2 3)) ; returns #t
+(member 10 '(1 2 3)) ; returns #f
+```
+
 # Boolean Functions
 - `=` only works with numbers
 ```scheme
 (= 5 0) ; returns #f
 ```
-- `equal?` works with anything
+- `equal?` is structural equality. It does not convert between integral and floating point representations &rightarrow; should use for all but numbers
 ```scheme
 (equal? '(1 2) '(1 2)) ; returns #t
 ```
-- `eq?` takes two non-numeric atoms 
+- `eq?` is pointer comparison. It returns `
+#t` if its arg refer to the same obj in memory
 - `list?` returns `#t` if the provided argument is a list
 ```scheme
 (list? '(1 2 3)) ; returns #t
