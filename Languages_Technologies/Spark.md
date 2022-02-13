@@ -5,9 +5,15 @@
 - Enables operations in Hadoop to run faster than MapReduce even when running on disk
 
 # Installation 
-https://docs.microsoft.com/en-us/dotnet/spark/tutorials/get-started?tabs=windows (Skip all parts related to .NET)
+- https://docs.microsoft.com/en-us/dotnet/spark/tutorials/get-started?tabs=windows (Skip all parts related to .NET)
 
-If on Windows, download `winutils.exe` from https://github.com/cdarlint/winutils
+- If on Windows, download `winutils.exe` from https://github.com/cdarlint/winutils
+
+- Test that Spark has been installed and configured correctly on Windows. Open command prompt and run
+```shell
+spark-shell
+```
+Navigate to [http://localhost:4040/](http://localhost:4040/)
 
 # Spark's components
 - Spark Core: Is the foundation engine
@@ -232,22 +238,57 @@ df.show()
 ```
 
 #### Useful APIs
-import session.implicits._
-
 ```scala
+import session.implicits._
+import org.apache.spark.sql.functions.{sum, count, avg, expr, collect_list}
+
 // Show
 df.show()
+
+// Show columns
+df.columns
+
+// Show summary statistics
+df.describe().show()
+df.describe(['col1', 'col2']).show()
 
 // Select columns
 df.select($"columnName")
 df.select($"col1", $"col2")
 df.select($"col1" as "COL 1", $"col2")
 
+// Where
+df.select($"columnName")
+  .where($"columnName" > 200)
+
 // Filter
 df.filter($"columnName" > 200)
 
 // GroupBy
 df.groupBy($"columnName").mean()
+df.groupBy($"columnName")
+  .agg(count($"columnName")).alias("NewColName")
+
+// Order by
+df.orderBy($"columnName")  
+df.orderBy(desc($"columnName"))
+
+// Drop rows where val in col is null
+df = df.where(col('columnName').isNotNull())
+
+// Aggregation
+df.select(
+    count("Quantity").alias("total_transactions"),
+    sum("Quantity").alias("total_purchases"),
+    avg("Quantity").alias("avg_purchases"),
+    expr("mean(Quantity)").alias("mean_purchases"))
+  .selectExpr(
+    "total_purchases/total_transactions",
+    "avg_purchases",
+    "mean_purchases").show()
+
+// To list
+df.agg(collect_list('colName')).collect()    
 ```
 
 # Dataset
@@ -305,6 +346,10 @@ dataset.show(n)
 // Filter
 dataset.filter(row => row.fieldName == ...).show()
 
+// Where
+dataset.select(...)
+       .where($"columnName" == "sth")
+
 // Groupby
 dataset.groupBy($"columnName").show()
 
@@ -338,6 +383,15 @@ val leftJoinDf = customer.join(payment,  Seq("customerId"), "left")
 val rightJoinDf = customer.join(payment,  Seq("customerId"), "right")
 ```
 
+# Create schema with column names and data types
+```python
+# Use in PySpark
+schema = StructType([
+    StructField("col1", StringType(), True)
+    StructField("col1", IntegerType(), True)
+])
+```
+
 # User-defined functions (UDFs)
 - After you define UDFs and register them, you can use them in DataFram/Dataset APIs
 ```scala
@@ -365,6 +419,8 @@ sparkSession.read
     .format("csv")
     .option("header", "true")
     .option("delimiter", ",")
+    .option("inferSchema" , "true") // Infer the data type of each column
+    .schema(userDefinedSchema) // Use this if don't want to use `inferSchema`
     .load("fileName.csv")
 
 // Write
@@ -374,6 +430,14 @@ myDataset.write
     .mode(SaveMode.Overwrite)
     .save("output.csv")    
 ```
+
+# JSON files
+```scala
+// Read: has all the `options` that read csv has
+sparkSession.read
+    .json("fileName.json")
+```
+
 # Parquet files
 > Default data source in Spark
 ```scala

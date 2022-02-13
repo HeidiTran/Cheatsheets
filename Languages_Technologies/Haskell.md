@@ -320,6 +320,13 @@ calcBmis xs = [bmi w h | (w, h) <- xs]
     where bmi weight height = weight / height ^ 2
 ```
 
+- **Partial function**: Functions which are well-defined on only *some* possible inputs. It's good practice to avoid partial function in *any* language
+```haskell
+head :: [a] -> a
+head (x:_) = x
+head [] = error "Prelude.head: empty list"
+```
+
 # Lambdas
 > **Def:** Anonymous function that we use when we need a function only once. Normally, we make a lambda with the sole purpose of passing it to a higher-order function
 > `\ param1 param2 -> functionBody`
@@ -516,7 +523,7 @@ Is fixed size &rightarrow; you need to know how many elems you'll be storing ahe
 ```haskell
 -- Use parantheses
 -- Separate elems with ,
-(3, 'a', "hello")
+(3, 'a', "hello") :: (Int, Char, String)
 ```
 
 The length and type of elems in a tuples make up its type
@@ -658,13 +665,15 @@ data Shape = Circle Float Float Float | Rectangle Float Float Float Float
 Circle 10 10 20  
 ```
 - `data` keyword &rightarrow; new data type is being defined
-- `Shape`, which is right before `=` denotes the type
+- `Shape`, which is right before `=` denotes the **type constructor**
 - `Circle` and `Rectangle` are **value constructors** &rightarrow; must start with an uppercase letter
     - `Circle` value constructor takes 3 params, `Rectangle` value constructor takes 4 params
     - Value constructors are functions that return a value of a data type
         - eg: `Circle :: Float -> Float -> Float -> Shape`
     - Value constructor's name can be the same as the data type's name
         - eg: `data Point = Point Float Float deriving (Show)`
+    - Value constructors may take no params
+      - eg: `data Maybe a = Nothing | Just a`
 - `deriving (Show)` makes type `Shape` part of the `Show` type class &rightarrow; Haskell will know how to display our data type as a string
 
 ```haskell
@@ -679,6 +688,18 @@ data Person = Person { firstName :: String
 
 -- Construct a person (param's order doesn't matter)
 Person {age = 20, height = 6.2, firstName = "A"}                
+```
+
+- **Recursive** Type: used to build inductive types
+```haskell
+data NaturalNumber = Zero | Succ NaturalNumber
+
+nat2int :: Nat -> Integer
+nat2int Zero = 0
+nat2int (Succ n) = 1 + nat2int n
+
+-- list data type
+data List a = Nil | Cons a (List a)
 ```
 
 # Type Constructors - Type Parameters
@@ -709,6 +730,17 @@ data Map k v = ...
 type PhoneNumber = String
 type Name = String
 type PhoneBook = [(Name, PhoneNumber)]
+```
+
+- Type can be nested
+```haskell
+type Pos = (Int, Int)
+type Trans = Pos -> Pos -- referenced type Pos
+```
+
+- Type **CANNOT** be recursive
+```haskell
+type Tree = (Int, [Tree]) -- BAD!
 ```
 
 # Patterns in functional programming
