@@ -64,7 +64,7 @@ compare x y -- returns GT/LT/EQ
 succ 9 + max 5 4 + 1 -- 16
 ```
 
-# Boolean Values
+# Boolean Values + Operators
 ```haskell
 True && False
 False || True
@@ -141,9 +141,26 @@ maxBound :: Int -- 9223372036854775807
 >
 > **TLDR;** A type class specifies a bunch of functions and when we decide to make a type an instance of a type class, we define what those functions mean for that type.
 >
+> Type classes correspond to **sets of types** which have certain operations defined for them
+>
 > Type classes **are not the same** as classes in languages like Java, Python, C++, etc.
 
-`=>` is a *class constraint* &rightarrow; Everything before the `=>` must be an instance of that class
+```haskell
+-- Look at the `Eq` type class provided by the Prelude
+-- Read: `Eq` is declared to be a type class
+-- with a single type parameter, `a`
+class Eq a where
+    (==) :: a -> a -> Bool
+    (/=) :: a -> a -> Bool
+
+-- Any type `a` which wants to be an instance of `Eq` must define 2 functions (==) and (/=) 
+-- with the indicated type signatures
+-- Example: to make `Int` an instance of `Eq`
+(==) :: Int -> Int -> Bool
+(/=) :: Int -> Int -> Bool
+```
+
+`=>` is a **type class constraint** &rightarrow; Everything before the `=>` must be an instance of that class
 
 ```haskell
 -- The equality function takes any two values that are of the same type and returns a `Bool`
@@ -192,6 +209,32 @@ pred Medium -- Small
 [Small, Small, Large] -- make a list
 [Small .. Large] -- [Small, Medium, Large] (a range)
 ```
+
+# Parametric polymorphism vs. Ad-hoc polymorphism
+### Parametric polymorphism
+- Allows a function to be used at different types, but performs *the same* operation no matter the type 
+- A function that's parametrically polymorphic in `a` MUST behave the same no matter if `a` is an `Int` or a `Bool`
+- The "not caring" what type `a` is is the "parametric" in **parametric polymorphism**
+```haskell
+-- Example of a polymorphic function
+-- This function will work for ANY type `a`
+-- The caller of `length` gets the pick of type
+-- `length` function doesn't no anything about the type since it's been abstracted over by the type variable `a`
+length :: [a] -> Int 
+```
+- Consequences of Parametricity
+    - Type erasure: All types information can be dropped during compilation. Types are important when writing and compiling Haskell code, but they're irrelevant when running the code &rightarrow; gives Haskell + other statically typed languages speed boost since they don't need to keep types around nor check them at runtime (like Python)
+    - Restricts what functions you can write
+        - eg: You cannot write functions like `strange :: a -> b` since it will never returns
+    - Lets you draw conclusions about a function knowing only its type
+        - eg: Given function `limited :: a-> a` we know that the function must produce a value type `a` when given a value of type `a`
+
+###  Ad-hoc polymorphism
+- Allows **different** behaviors for different types (`==` on `Int` behaves differently than `==` on `String`)
+- Is the kind of polymorphism seen in OO languages
+- Is achieved by using type classes &rightarrow; use type class constraint to make the functions work for SOME types, but not all types
+
+---
 
 # Variable assignments with `let` expression
 > Template: `let <bindings> in <expression>` The variables defined in `let` are visible within the entire `let` expression
@@ -534,6 +577,15 @@ let myList = [(1, 2), (3, 4, 6)] -- inconsistent length
 let myList = [(1, 'a'), (1, 2)] -- inconsistent type
 ```
 
+Get the elems
+```haskell
+-- First elem
+fst s
+
+-- Second elem
+snd s
+```
+
 # Pairs
 ## Common functions to manipulate pairs
 ```haskell
@@ -742,6 +794,8 @@ type Trans = Pos -> Pos -- referenced type Pos
 ```haskell
 type Tree = (Int, [Tree]) -- BAD!
 ```
+
+# Functor Type Class
 
 # Patterns in functional programming
 - Start with a certain set of candidate solutions, and successively apply transormations and filters to them until you've narrowed the possibilities down to the one/several solutions
