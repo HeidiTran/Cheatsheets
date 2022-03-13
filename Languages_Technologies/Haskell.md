@@ -155,9 +155,29 @@ class Eq a where
 
 -- Any type `a` which wants to be an instance of `Eq` must define 2 functions (==) and (/=) 
 -- with the indicated type signatures
--- Example: to make `Int` an instance of `Eq`
-(==) :: Int -> Int -> Bool
-(/=) :: Int -> Int -> Bool
+instance Eq Int where
+    (==) :: Int -> Int -> Bool
+    (/=) :: Int -> Int -> Bool
+
+-- Define type class YesNo
+class YesNo a where
+    yesno :: a -> Bool
+
+-- Concrete instance of a YesNo type class for Int
+instance YesNo Int where
+    yesno 0 = False
+    yesno _ = True
+
+-- Concrete instance of a YesNo type class for Int
+instance YesNo String where
+    yesno "" = False
+    yesno _ = True
+
+-- Usage
+ghci> yesno 5
+True
+ghci> yesno ""
+False    
 ```
 
 `=>` is a **type class constraint** &rightarrow; Everything before the `=>` must be an instance of that class
@@ -796,6 +816,106 @@ type Tree = (Int, [Tree]) -- BAD!
 ```
 
 # Functor Type Class
+- Abstract `map` function. `map` works with list only. We want to be able to write `map` that works with other type of data structure
+- Functor allows you to define a `map` function for **type constructors that takes a single param which is a type**
+```haskell
+class Functor f where
+    fmap :: (a -> b) -> f a -> f b
+```
+
+```haskell
+-- Maybe type constructor
+data Maybe a = Nothing | Just a
+
+-- Since Maybe is a type constructor with only one type param a
+-- We can write a Functor for Maybe
+instance Functor Maybe where
+    -- fmap :: (a -> b) -> Maybe a -> Maybe b
+    fmap f Nothing = Nothing
+    fmap f (Just x) = Just (f x)
+```
+
+```haskell
+-- Tree type constructor
+data Tree a = Leaf a | Node (Tree a) (Tree a)
+
+-- Since Tree is a type constructor with only one type param a
+-- We can write a Functor for Tree
+instance Functor Tree where
+    -- fmap :: (a -> b) -> Tree a -> Tree b
+    fmap f (Leaf x) = Leaf (f x)
+    fmap f (Node l r) = Node (fmap f l) (fmap f r)
+```
+
+```haskell
+-- Either type constructor
+data Either a b = Left a | Right b
+
+-- Since Either takes 2 type params, we can onlly write a Functor for Either
+-- if we partially apply Either to the first param
+instance Functor (Either a) where
+    -- fmap :: (b -> c) -> (Either a) b -> (Either a) c
+    fmap f (Left x) = Left x  
+    fmap f (Right x) = Right (f x)
+
+-- Note: Nothing occur for the (Left x) case since Left contains type a, but f only knows how to transform b -> c. Thus, we have to leave the value of Left unchanged
+```
+## Functor Laws
+```haskell
+-- Law 1
+fmap id = id
+
+-- Law 2
+fmap (f . g) = fmap f . fmap g -- = fmap f (fmap g x)
+```
+
+```haskell
+-- Proof that Maybe Functor follows the laws
+
+-- Law 1
+fmap id Nothing = Nothing
+id Nothing = Nothing
+
+fmap id (Just x) = Just (id x) = Just x
+id (Just x) = Just x
+
+-- Law 2
+fmap (f . g) Nothing = Nothing
+fmap f (fmap g Nothing) = fmap f Nothing = Nothing
+
+fmap (f . g) (Just x) = Just $ (f . g) x = Just (f (g x))
+fmap f (fmap g (Just x)) = fmap f (Just (g x)) = Just (f (g x))
+```
+---
+# Applicative
+- Problem with `Functor` is it only takes type constructor with **only one** type param &rightarrow; can't write `Functor` for `Either` without partial apply
+- `Applicative` allows you to define a `map` function for **type constructors that takes multiple type params**
+
+```haskell
+class (Functor f) => Applicative f where
+    pure :: a -> f a
+    (<*>) :: f (a -> b) -> f a -> f b
+
+-- An Applicative takes a Functor f
+-- `pure` takes an arbitrary value and turns it into a functor value i.e. wrap the value in a context box
+-- `<*>` takes a functor value that wraps a function + a functor value that wraps a value
+-- > "unwraps" the function in the first arg and applies it to the unwrapped second arg
+```
+
+```haskell
+instance Applicative Maybe where
+    pure = Just -- to turn a val into a Maybe val
+    Nothing  <*> _        = Nothing
+    _        <*> Nothing  = Nothing
+    (Just f) <*> (Just x) = Just (f x)
+
+-- Cleaner version
+instance Applicative Maybe where
+    pure = Just 
+    Nothing  <*> _        = Nothing
+    (Just f) <*> (Just x) = fmap f (Just x)
+```
+---
 
 # Patterns in functional programming
 - Start with a certain set of candidate solutions, and successively apply transormations and filters to them until you've narrowed the possibilities down to the one/several solutions
