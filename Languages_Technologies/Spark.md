@@ -273,6 +273,9 @@ df.groupBy($"columnName")
 df.orderBy($"columnName")  
 df.orderBy(desc($"columnName"))
 
+// Drop a column
+df = df.drop('colName')
+
 // Drop rows where val in col is null
 df = df.where(col('columnName').isNotNull())
 
