@@ -154,7 +154,7 @@ from sklearn.linear_model import LogisticRegression
 
 logreg = LogisticRegression()
 logreg.fit(X_train, Y_train)
-Y_pred = logreg.predict(X_test)
+y_pred = logreg.predict(X_test)
 
 # Calculate feature's correlation to the dependent variable
 # coeff_df is the `df` WITHOUT the dependent variable
@@ -170,14 +170,14 @@ coeff_df.sort_values(by='Correlation', ascending=False)
 from sklearn.svm import SVC
 
 svc.fit(X_train, Y_train)
-Y_pred = svc.predict(X_test)
+y_pred = svc.predict(X_test)
 ```
 ```python
 from sklearn.svm import LinearSVC
 
 linear_svc = LinearSVC()
 linear_svc.fit(X_train, Y_train)
-Y_pred = linear_svc.predict(X_test)
+y_pred = linear_svc.predict(X_test)
 acc_linear_svc = round(linear_svc.score(X_train, Y_train) * 100, 2)
 ```
 
@@ -190,7 +190,7 @@ from sklearn.neighbors import KNeighborsClassifier
 # n_neighbors's default value = 5
 knn = KNeighborsClassifier(n_neighbors = 3)
 knn.fit(X_train, Y_train)
-Y_pred = knn.predict(X_test)
+y_pred = knn.predict(X_test)
 ```
 
 # Naive Bayes
@@ -201,7 +201,7 @@ from sklearn.naive_bayes import BernoulliNB # BernoulliNB is designed for binary
 
 nb = GaussianNB()
 nb.fit(X_train, Y_train)
-Y_pred = nb.predict(X_test)
+y_pred = nb.predict(X_test)
 
 # To extract what the most important features to the model are
 # Get only the Naive Bayes step from the pipeline
@@ -226,7 +226,7 @@ from sklearn.linear_model import Perceptron
 
 perceptron = Perceptron()
 perceptron.fit(X_train, Y_train)
-Y_pred = perceptron.predict(X_test)
+y_pred = perceptron.predict(X_test)
 ```
 
 # Stochastic Gradient Descent
@@ -235,7 +235,7 @@ from sklearn.linear_model import SGDClassifier
 
 sgd = SGDClassifier()
 sgd.fit(X_train, Y_train)
-Y_pred = sgd.predict(X_test)
+y_pred = sgd.predict(X_test)
 ```
 
 # Decision Tree
@@ -247,7 +247,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 decision_tree = DecisionTreeClassifier(random_state=100)
 decision_tree.fit(X_train, Y_train)
-Y_pred = decision_tree.predict(X_test)
+y_pred = decision_tree.predict(X_test)
 ```
 
 # Random Forest aka Random Decision Forests
@@ -266,7 +266,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 random_forest = RandomForestClassifier(n_estimators=100)
 random_forest.fit(X_train, Y_train)
-Y_pred = random_forest.predict(X_test)
+y_pred = random_forest.predict(X_test)
 random_forest.score(X_train, Y_train)
 ```
 
