@@ -58,6 +58,9 @@ conda list -n your-env-name
 - Install a package
 ```bash
 conda install <package name>
+
+# If package not found on conda -> install with pip
+pip3 install <package name>
 ```
 
 - Update a package
