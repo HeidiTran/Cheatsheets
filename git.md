@@ -40,7 +40,7 @@ git remote prune <remoteName>
 ```
 
 
-## **III. Create a branch** Default `remoteName` is `origin`
+## **III. Create branch** Default `remoteName` is `origin`
 
 - Create a local branch and switch to it (***Prefer***)
 ```bash
@@ -217,16 +217,39 @@ git status
 git push <remoteName> <branchName>
 ```
 
-## **IX. Merging**
+## **IX. Rebase**
 
-- Rebase a branch into the current working branch (*Reapply local commits on top of pushed commits*)
+- Rebase branch into the current working branch (*Reapply local commits on top of pushed commits*)
 ```bash
+git checkout <branchName>
 git rebase <remoteName> <branchName>
+git push origin --force
 
 # eg: git rebase origin feature-branch
 ```
 
-- Merge a branch into the current working branch w/o conflict (*when the working branch and current branch has no conflicts*)
+- Undo `git rebase <remoteName>` above
+```bash
+git reflog
+# Find the commit you want to travel back in time. eg: 7
+git reset --hard HEAD@{7}
+```
+
+- Interactive rebase &rightarrow; Good for squashing commits
+```bash
+# n is the number of commits you want to interactively rebase
+git rebase -i HEAD~n
+```
+
+- Undo commit, but keep all changes
+```bash
+git rebase HEAD~1 --soft
+git reset
+```
+
+## **X. Merge**
+
+- Merge branch into the current working branch w/o conflict (*when the working branch and current branch has no conflicts*)
 ```bash
 # Step 1: Merge a local branch
 git merge <branchName>
@@ -268,7 +291,7 @@ git cherry-pick -n <commitHash>
 # eg: git cherry-pick -n 12345 
 ```
 
-## **X. Clean up branches**
+## **XI. Clean up branches**
 
 - Revert local changes for a single file
 ```bash
@@ -307,9 +330,9 @@ git reset --hard <remoteName>/<branchName>
 
 # eg: git reset --hard origin/new-feature
 ```
-## **XI. Stashing**
+## **XII. Stashing**
 
-- Stack the changes in a dirty working directory
+- Stash the changes in a working directory
 ```bash
 # Option 1 (Prefer): Create a named stash
 git stash save "<stashName>"
@@ -318,6 +341,11 @@ git stash save "<stashName>"
 git stash
 
 # eg: git stash save "myStash"
+```
+
+- Stash changes (including new files) in a working directory
+```bash
+git stash -u
 ```
 
 - View the list of stashed changes
@@ -362,7 +390,7 @@ git stash drop stash@{<stashId>}
 # eg: git stash drop stash@{1}
 ```
 
-## **XII. List commits**
+## **XIII. List commits**
 
 - List commits begin from the latest
 ```bash
@@ -381,7 +409,7 @@ git log <commitHash>
 git log --author="<userName>"
 ```
 
-## **XIII. Delete a branch**
+## **XIV. Delete branch**
 
 - Delete a local branch w/o any unmerged changes (*the branch won't be deleted on remote repo*)
 ```bash
@@ -407,7 +435,7 @@ git push -d <remoteName> <branchName>
 # eg: git push origin :branch-to-delete 
 ```
 
-## **XIV. Rename a branch**
+## **XV. Rename branch**
 
 - Rename current local branch (*will not rename remote branch*)
 ```bash
@@ -440,7 +468,7 @@ git push -u <remoteName> <newBranchName>
 # 	git push -u origin new-shiny-name
 ```
 
-## **XV. Remote Repo**
+## **XVI. Remote Repo**
 
 - List all remote endpoint (all possible \<remoteName>)
 ```bash
