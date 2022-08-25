@@ -62,10 +62,12 @@ string path = @"folder\subfolder\file.txt";
 
 ### Import packages
 ```csharp
-using <library name>
+using <library name>;
+
 using System;
 using System.Collections.Generic;
-using System.IO;
+
+using static System.Math;   // Import static methods/enum/... from a class
 ```
 
 ### Get input from console
@@ -111,6 +113,18 @@ enum Level {
 }
 (int) Level.BIG // return 2
 (Level) 1       // return Level.MEDIUM
+```
+
+- Range variables
+  - Introduced by the `from` and `let` clause
+  - Code becomes more concise
+  - Once initialized, a range var cannot store a different value
+```csharp
+from word in words          // word is a range var
+let length = word.Length    // length is a range var
+where length > 4
+orderby length
+select string.Format("{0}: {1}", length, word.ToUpper());
 ```
 
 ### Bool data type
@@ -282,7 +296,21 @@ foreach (var v in productQuery) {
 - Update properties
 ```csharp
 var apple = new { Origin = "Mexico", Price = 2.3 };
+apple = new { Origin = "Mexico", Price = 1.1 };
+
+// Anonymous type from another anonymouse type
 var onSale = apple with { Price = 2 };
+```
+
+- Collection of anonymous types
+  - All elems MUST have the same # of properties, same properties' names and same properties order
+```csharp
+var cats = new[] {
+    new { Name = "Orange", Age = 6 },
+    new { Name = "Red", Age = 7 },
+    new { Name = "Yellow", Age = 8, Color = "Yellow" }, // Invalid
+    new { Age = 8, Name = "Yellow" }, // Invalid
+};
 ```
 
 ### If - else if - else
@@ -300,6 +328,19 @@ return (expr) ? A : B;
     - `a??b` means that if `a` does not evaluate to `null`, return `a`, else return `b`
 ```csharp
 T v = <val if v != null> ?? <val if v = null>;
+```
+
+- Null conditional operator `?` &rightarrow; short-circuiting operator that stops if the expression evaluates to null
+```csharp
+// without null conditional
+var readingCustomers = allCustomers
+    .Where(c => c.Profile != null &&
+                c.Profile.DefaultShippingAddress != null &&
+                c.Profile.DefaultShippingAddress.Town == "Reading");
+
+// with null conditional    
+var readingCustomers = allCustomers
+    .Where(c => c.Profile?.DefaultShippingAddress?.Town == "Reading");            
 ```
 
 - Switch
@@ -345,6 +386,15 @@ foreach (var item in collection) { ... }
 // return type: void, <other data types>
 ```
 
+- Caling
+  - **Tip**: When arg evaluation has side effects
+```csharp
+public void MyFun(string name, int age) {}
+
+MyFun("Orange", 5);
+MyFun("Orange", x: 5); // equivalent, but with named arg
+```
+
 - Increment, Decrement
 ```csharp
 i++;
@@ -352,11 +402,15 @@ i--;
 ```
 
 - Default (Optional) params
-    - **MUST appear after non-default params**
+    - MUST appear after non-default params
+    - Value MUST be compile-time constants *since those values are embedded in the IL for the function call*
+    - `ref` and `out` param can't have default values
     - A function can have many default params
 ```csharp
 public void MyFun(int x, int y = 2) {}
 ```
+
+
 
 - Variable arguments (Varargs)
 Allow variable number of arguments of the same type
@@ -386,7 +440,8 @@ Add(1, 5)           // return 6
 public static void Main(string[] args) {}
 ```
 
-- Lambda
+- Lambda expressions
+  - Why: Simpler to construct delegates than anonymous methods
 ```csharp
 functionName = (input-parameters) => expression
 
@@ -395,6 +450,15 @@ functionName = (input-parameters) => { <sequence-of-statements> }
 // Example
 Func<int, int, int> mult = (x, y) => x * y;
 Console.WriteLine(mult(5, 6));  // 30
+```
+
+- Using in `LINQ` transformation
+```csharp
+string[] words = { "keys", "coat", "laptop" };
+IEnumerable<string> query = words
+    .Where(word => word.Length > 4)
+    .OrderBy(word => word)
+    .Select(word => word.ToUpper());
 ```
 
 - Function that returns a function
@@ -825,7 +889,7 @@ public class Cat {
     public int Age { get; set; }
     public string Name { get; set; }
 
-    public Cat(string Name) {   
+    public Cat(string name) {   
         this.Name = name;
     }
 }
@@ -845,11 +909,14 @@ Cat sameCat = new Cat("Fluffly") { Age = 10 };
 var cats = new List<Cat>() {
     new Cat { Age = 10, Name = "Fluffy" },
     new Cat { Age = 2, Name = "Orange" }
-}
+};
 ```
 
 ### Properties
-- Declare
+Allow you to differentiate between (how state's accessor and mutator are exposed in the API) and (how state is implemented)
+
+**Tip**: Expose properties. Make `private` fields.
+- Declare mutable properties
 ```csharp
 // normal
 private string name;
@@ -861,20 +928,61 @@ public string Name
 
 // better using Automatically implemented properties
 public string Name { get; set; }
-public string Name { get; private set; }
+public string Name { get; set; }
+```
+
+```csharp
+// normal
+private List<Person> _friends = new List<Person>();
+public List<Person> Friends {
+    get { return _friends; }
+    set { _friends = value; }
+}
+
+// better using Automatically implemented properties
+public List<Person> Friends { get; set; } = new List<Person>();
+```
+
+- Declare immutable (read-only) properties
+```csharp
+// Values can only be set inside constructors
+
+public double X { get; private set; }   // < C# 6
+public double X { get; }                // >= C# 6 <-- preferred.    
+
+public List<Person> { get; } = new List<Person>();
 ```
 
 - Declare using expression body definitions
-  - Use whenever the logic for a property consists of a single expression
+  - Why: Implementation of properties more readable and concise
+  - When: whenever the logic for a property consists of a single expression
 ```csharp
-public class Person
+public class Point
 {
-   private string _firstName;
-   private string _lastName;
+    public double X { get; }
+    public double Y { get; }
 
-   public string Name => $"{_firstName} {_lastName}";
+    // without expression-body
+    public double DistanceFromOrigin { get { return Math.Sqrt(X*X + Y*Y); } }
+
+    // with expression-body
+    public double DistanceFromOrigin => Math.Sqrt(X*X + Y*Y);
 }
 ```
+
+#### Properties vs. Fields
+> **Properties**: Act as part of the contract a type provides: it advertised functionality
+> 
+> **Fields**: Implementation details i.e. the mechanism inside the box which the users don't know about
+- When you expose class state as public fields, the capabilities of the class ("I can access its X and Y values") are closely tied to the implementation ("I'll use two double fields"). Furthermore, you can't
+  - Perform validation when set new values
+  - Perform computation when get values
+  
+- Example
+  - A `BankAccount` class has a `string Balance` property
+    - The fields could have been `double dollar` and `double cent`
+    - The fields could have been `double balance`
+  - If you didn't use properties and expose the fields instead, you're stuck with the implementation details of using 2 `double` vars or 1 `double` var
 
 ### Interface
 - Declare
@@ -961,5 +1069,53 @@ foreach (var i in Fibonacci().Take(5)) {
 }
 ```
 
+### Query expressions for `LINQ`
+- Why: Concise code using [query-specific clause](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/query-keywords) `select`, `where`, `let`, `group by`, etc.
+- Constraints
+  - MUST start with `from` clause 
+  - MUST end with `select` or `group by` clause
+```csharp
+string[] words = { "keys", "coat", "laptop" };
+
+// Non-query expressions
+IEnumerable<string> query = words
+    .Where(word => word.Length > 4)
+    .OrderBy(word => word)
+    .Select(word => word.ToUpper());
+
+// Query expressions    
+IEnumerable<string> query = from word in words
+                            where word.Length > 4
+                            orderby word
+                            select word.ToUpper();
+```
+
+### Extension methods
+- Enables you to "add" methods to existing types without modifying the original type
+- Why: useful for chaining methods in `LINQ`
+- How:
+  - Extension methods are static methods. 
+  - The first param, prefix with `this`, specifies what type to extend
+
+```csharp
+// Example: Add an extension to the String class
+public static int WordCount(this string str)  {
+    return str.Split(new char[] { ' ', '.', '?'}, StringSplitOptions.RemoveEmptyEntries).Length;
+}
+
+string sentence = "Hello world";
+int count = WordCount(sentence);    // without ext methods
+int count = sentence.WordCount();   // with ext methods
+```
+
 ## Tips
-- If a class implements `IEnumerable`, then it's a collection
+- If a class implements `IEnumerable`, then it's a *collection*
+- The process of looking up the meaning of a name in a certain context is called *binding*
+
+### List of TODO sections
+- `Funct` and delegates
+- Captured variables
+- Lambda expressions
+- Asynchronous
+- LINQ
+- Dynamic types
