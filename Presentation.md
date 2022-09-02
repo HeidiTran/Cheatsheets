@@ -1,0 +1,146 @@
+# Slide creation
+- Watch TED talk [Death by PowerPoint](https://youtu.be/Iwpi1Lm6dFo)
+- Know your audience, things to keep in mind
+  - Who are they?
+  - What is their demographic?
+  - What do they want to get out of the conference or session?
+  - What is one thing that you could help them with?
+  - What problems do they face on a regular basis that you can help solve?
+  - What is the key message and supporting points
+  - What data do you need to drive your message through?
+- What is the big idea
+- Why does the audience care?
+- How do you want the audience to feel?
+- Be able to summarize your presentation in a single sentence
+- Think about the story you want to tell
+  - Typicall "story" structure
+    - Protagonist (hopefully this is the audience)
+    - Antagonist (the problem)
+    - Inciting Action
+    - Conflict
+    - Resolution
+  - Sample presentation story structure
+    - Problem or goal we're trying to achieve (the why)
+    - Solution
+    - Call to Action
+- Have an Agenda slide
+  - Repeat agenda slide in talk as you transition between topics by highlighting the next topic. This gives people a mental break and a clear indicator of transition. It also allows people who entered late an idea of the talk and where you are in it.
+  - Tell them what you're going to tell them, tell them, and then tell them what you just told them
+- One message per slide
+- **Avoid sentences** on your slides if speaking at the same time
+  - Remember the limitations of working memory - people can only read or listen at the same time
+  - Use PPT as intended - Slide is for presentation material only (short bits of text and an image). Everything else can be moved into your presenter notes
+- Use **size** to steer focus 
+  - Attention comes down to 4 factors: we are drawn to moving objects, signaling colors, contrast-rich objs, big objects
+  - Rule - the most important part should always be the biggest. Try flipping the traditional PPT template by making the content that matters bigger than the slide title
+- **Use contrast** to steer focus
+  - eg: highlight the current point and shade anything on the slide that you don't want the attention on such as points you have already covered
+- **Use dark backgrounds** on your slides to draw attention to you (the presenter)
+  - Remember that YOU are the presentation and the slides are just your visual aid
+- Limit to **six objs per slide** - anything more creaters cognitive overload and this is when you lose your audience's attention.
+- When you acronyms, make sure to clearly define it the first you use it. Spell it all the way out.
+  - Jargon we use that we think is obvious very much not be depending on the audience. Don't let new people get lost.
+- Have real stories, war stories, and analogies
+  - This allows people to relate unknown/new topics to things they do know. It grounds them.
+  - War Stories are things they can relate to and cements it into people's mind
+    - "That could have been us"
+  - Real stores/shared experiences also work
+    - Times when you made a mistake
+    - What didn't work
+  - Analogies help take the unknown and make it known
+    - This is a Single Page App. An example of a Single Page App is Twitter and Facebook
+- Add Tips to het the Ahaaaaa moments
+
+### Designer tips to perfective the art of PPT slides
+- Always remember that your adience is sitting far away. So ensure that your title font size is large enough to be seen from a distance, and that your body text is no smaller than 20px
+- Use only 2 colors for your entire presentation - a primary and secondary color. If you must use a large color palette, your maximum choice should be up to 5 colors.
+- Make sure that there's enough white space throughout your presentation. This will give your content room to breathe. Less is definitely more in this case
+- Emphasize only one object per slide - whether it's an image, statistic, quote. This will make sure your audience stays focused.
+
+---
+# Demos
+- Practice with using Zoom or some other tool to magnify the screen. If you practice without it, when you present live and someone yells from the back "Can you zoom in?" can throw off your flow of the demo
+- Take backup screenshots/videos to use IN CASE of demo failure/loss of internet/wirdness
+  - Have them hidden in your deck and you can then quickly flip back, unhide, and flip back
+- Make sure your font especially in a terminal is black text on white. People need to be able to see it from the back. This isn't the time to have homebrew green on black fonts which make it really hard to read from the back. We are going for readability, and maximum contrast.
+- SLOW DOWN
+  -  People have a tendency to move quickly through a demo after lots of practice and assuming the audience knows where they are going. They DON'T! Go slow.
+  -  Tip is to describe what you are doing as you do it. This will force you to slow down and the audience will know WHY you are doing something.
+     -  eg: "Now I need to check the lgos to find the Sign-In". To do that, over here under Logs I will click on Sign-In logs that will show me all of the Sign-Ins on my tenant"
+-  Have a checklist to make sure you don't skip steps
+
+---
+# Presentation
+- Speak loudly and clearly
+- If you aren't excited about what you are talking about, why should they be?
+- When you move, move with a purpose
+- Starting is usually the most difficult part. Memorize your introduction.
+  - People will remember the first and last thing you say!
+- Use inclusive language
+  - "Hey everyone" "Thank you folks"
+  - Choose your words with intention
+  - Show ego distance ("we aren't perfect, we are learning")
+  - Step away from your notes and connect with the audience
+  - Get to know the audience and ask for feedback
+- Establish your credibility right up front
+- Whether giving a public presentation or an internal presentation, start your presentation by establishing credibility before you give them info. Keep it brief but work it into your introduction. So in addition to your title/role consider a short story about your background related to the topic, share an experience that shaped the presentation or conclusion or even reveal the legwork or other references that support your info and is directly related to what you are about to tell them.
+- Remember to hit on these key parts: Need, Solution, Call to Action
+- Include a Goal early in the presentation, set realistic expectations
+  - Defining a key goal structures the entire presentation. Details which don't serve this goal and advance your key message should be removed from the presentation
+    - eg: "You are going to learn these 5 things"
+- Tell a consistent story
+  - In addition to your key points, you should keep visual and stylistic consistency in mind. Do this by
+    - Using the same or similar typography, colors and imagery across all slides
+    - Using templates can help with maintaining the same look and feel
+*A slight exception can be transition slide. While these should appear cohesive with the rest of your presentation, they can be an opportunity to introduce a different style and add interest. For example, if your overall slides have a dark background with light text, you can use transitional slides that have a light background with dark text. This way, thye'll still feel like they're from the same presentation family without being completely uniform*
+- Use PPT to clarify and amplify your message, but keep in mind it's NOT a teleprompter
+  - Don't read off slides. Use visuals on slides which are to augment, not repeat, the words of the speaker. Slides should convey graphically what words cannot, If the words are so straightforward that they need no clarification or amplification, then don't use slides.
+- Involve the audience in the presentation
+  - Include questions for the audience. Solicit opinions and experiences from the audience. Turn the presentation into a guided discussion with visual support.
+  - Closed ended questions can help reinforce topics
+    - What were the first 3 steps again?
+    - What does Blah stand for again?
+  - Call on someone that is looking at you. Make them feel GREAT for getting it correct.
+  - Make sure to DIRECT questions to the MICROPHONE. The vast majority of your adience will be watching remote/after the fact. There is nothing more frustrating as a viewer to not hear the question and the speaker said "Great question! Yes it does".
+    - Hearing the actual question is best. If they refuse to use the mic, at a minimum repeat the question for the recording.
+- Use supporting material liberally
+  - It's important to remember to continue building credibility as you go through your presentations (not only in the intro). For instance, you can tell a story, give statistics, reference research, or even provide quotes from well-respected figures that support your message.
+- Make sure to close with the Call to Action and make them feel they can conquer the world. Coach them about doing the Call to Action (think S.M.A.R.T goals)
+  - Specific
+  - Measurable
+  - Attainable
+  - Relevant
+  - Time-Bound
+- Willing to connect after the session. Share contact info.
+
+---
+# Preparation
+- Practice, Practice, Practice!
+  - The only way to look like you've done this session 100 times is to have practiced it 99.
+  - Video taping yourself can be painful but also extremely helpful.
+- If you are presenting with multiple people, triple the practice.
+- Time yourself in Practice
+  - Know how long it takes to get through each section of your presentation
+  - Write down a note to keep at the podium/computer what time you should be at. This will help you to know to speed up or slow down.
+    - Most timers Count DOWN to 0. when doing your timing if your session is 60 mins, and you know section one takes 20 mins, write down `Section 1-40 mins`. That way when you finish your section and glance at your timer you will know how you are doing on time.
+  - Bonus: Have a few 5 to 10 mins of EXTRA you can use if you finish early or can easily cat if you are running behind
+- Understand the setup of the room or virtual meeting tool
+  - Are you on stage behind a podium or flat on the floor?
+  - Is there handheld mic or clip on mic?
+    - Pack the correct clothes that let you clip a mic on
+  - How will you see your slides?
+  - Do you have the virtual software to present?
+  - Are you able to share screen correctly for demos?
+- Bring final copy of the slides without on a USB drive
+- If possible, find the room you're presenting at early
+
+---
+# In the room Pre-presentation
+- Show up early for any pre-tech checks. Confirm things are working as expected. Get mic'd up.
+- Greet people right away, say hello. Treat them like they are a guest at your house.
+  - Make them feel confortable
+- Talk to your audience. More friendly you are the more they like you.
+- Make chit chat
+  - Did you see the keynote, what did you think?
+  - What was the best session you saw today?
+  - Where are you from?
