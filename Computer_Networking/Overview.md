@@ -275,7 +275,8 @@ tracert 8.8.8.8
 - IP addr of `8.8.8.8` is resolved to its **fully qualified domain name (FQDN)** of `dns.google`
 - 30 hops = 30 routers
 - Hop 1 is the default gateway
-- `tracert` ping each hop 3 times and records the latency i.e. how longs it takes for a reply to come back
+- `tracert` ping each hop 3 times and records the latency i.e. how longs it takes for a reply to come back from the router
+- Hop 3 router showed astericks, which indicate that the device chose not to provide a reply, but still forwarded the request
 
 Packing switching implementation: X.25, frame relay
 
@@ -350,7 +351,8 @@ Layer 4: Transport layer
 
 Layer 3: Network layer
 - Purpose: Responsible for the logical addressing of devices through the use of IP addr + route selection for transmitted data (how to go from A to B using routing protocols like ICMP and ARP) + move messages from one node to another until reaches destination
-- The entire Network layer message is called a packet
+- The entire Network layer message is called a packet -> network layer header = packet header
+- Example of layer 3 devices: routers
 - Common protocols
   - IP
   - **Internetwork Packet Exchange (IDP)**
@@ -358,7 +360,7 @@ Layer 3: Network layer
 Layer 2: Data-link layer
 - Purpose: Create a logical connection between nodes on a subnet. If the destination device is within the same subnet, the link will be to that device. Else, the link will be to the default gateway. Responsibilities include placing data onto physical media, error notifications, and flow control.
   - Error notifs are done using a checksum in the trailer that was added to the data
-- Example of layer 2 devices: routers, switches
+- Example of layer 2 devices: switches
 - Split into 2 sublayers
   - **Logical Link Control (LLC)**: An interface witht the network layer + identifies what network layer protocol is used to store in the frame's header.
   - **Media Access Control (MAC)**: Control how the data is put onto certain media + how data access the media
